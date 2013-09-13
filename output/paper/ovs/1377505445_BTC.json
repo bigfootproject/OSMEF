@@ -1,0 +1,327 @@
+{
+    "btc": {
+        "conn_1": {
+            "rx": {
+                "KB_per_cpu_second": "2624550.15",
+                "accept": "192.168.1.102",
+                "buflen": "65536",
+                "calls_per_sec": "30489.66",
+                "cpu": "74%",
+                "cpu_seconds": "267.51",
+                "elapsed": "6:00",
+                "io": "0+18pf",
+                "io_calls": "10976278",
+                "megabytes": "685645.0625",
+                "memory": "0i+0d-300maxrss",
+                "mode": "tcp",
+                "msec_per_call": "0.03",
+                "nstream": "1",
+                "port": "7101",
+                "rate_KBps": "1950279.06",
+                "rate_Mbps": "15976.6861",
+                "real_seconds": "360.00",
+                "receive_window_avail": "43690",
+                "receive_window_size": "87380",
+                "send_window_avail": "12020",
+                "send_window_size": "24040",
+                "stats": "cpu",
+                "swaps": "10898014+726csw",
+                "system": "265.0",
+                "user": "2.4"
+            },
+            "tx": {
+                "buflen": "65536",
+                "calls_per_sec": "30473.11",
+                "connect": "192.168.1.101",
+                "cpu": "99%",
+                "elapsed": "6:00",
+                "host": "192.168.1.101",
+                "io": "0+3pf",
+                "io_calls": "10970321",
+                "megabytes": "685645.0625",
+                "memory": "0i+0d-4966maxrss",
+                "mode": "tcp",
+                "msec_per_call": "0.03",
+                "mss": "1448",
+                "nstream": "1",
+                "port": "7101",
+                "rate_KBps": "1950279.11",
+                "rate_Mbps": "15976.6865",
+                "real_seconds": "360.00",
+                "receive_window_avail": "43690",
+                "receive_window_size": "87380",
+                "retrans": "0",
+                "rtt_ms": "0.234",
+                "send_window_avail": "12020",
+                "send_window_size": "24040",
+                "stats": "cpu",
+                "swaps": "127+2808csw",
+                "system": "357.5",
+                "time_limit": "360.00",
+                "user": "1.7"
+            }
+        }
+    },
+    "concurrent": 1,
+    "name": "ovs 360 seconds, 1 concurrency",
+    "receiver": "192.168.1.101",
+    "senders": "192.168.1.102",
+    "state_receiver": {
+        "buffers": "31217232",
+        "cached": "42765208",
+        "kernel_version": "3.2.0-51-generic",
+        "load_1": "4.33",
+        "load_15": "2.54",
+        "load_5": "3.98",
+        "mem_free": "387376",
+        "mem_total": "131992032",
+        "net_bond0": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "539.89",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "9.00"
+        },
+        "net_eth0": {
+            "bytes_inS": "14137.77",
+            "bytes_outS": "19101.58",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "41.19",
+            "packets_outS": "66.59"
+        },
+        "net_eth1": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_eth2": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_eth3": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_lo": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "0.00",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "0.00"
+        },
+        "net_tap1fb7e559-33": {
+            "bytes_inS": "1474.11",
+            "bytes_outS": "501.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tap581c32ec-66": {
+            "bytes_inS": "1570.09",
+            "bytes_outS": "518.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.40",
+            "packets_outS": "3.20"
+        },
+        "net_tap5d78521f-67": {
+            "bytes_inS": "1570.89",
+            "bytes_outS": "518.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.40",
+            "packets_outS": "3.20"
+        },
+        "net_tap672f5592-2a": {
+            "bytes_inS": "1474.11",
+            "bytes_outS": "501.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tapa85dab06-a0": {
+            "bytes_inS": "1564.09",
+            "bytes_outS": "518.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.40",
+            "packets_outS": "3.20"
+        },
+        "net_tapb7e5d1eb-74": {
+            "bytes_inS": "1474.11",
+            "bytes_outS": "501.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tapbedab9ff-1d": {
+            "bytes_inS": "1468.31",
+            "bytes_outS": "501.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_total": {
+            "bytes_inS": "24733.45",
+            "bytes_outS": "23741.45",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "84.38",
+            "packets_outS": "106.18"
+        },
+        "processes": "2/441",
+        "slab_reclaimable": "1182192",
+        "slab_total": "2246448",
+        "slab_unreclaimed": "1064256",
+        "swap_free": "0",
+        "swap_total": "0"
+    },
+    "state_sender": {
+        "buffers": "31081884",
+        "cached": "42882336",
+        "kernel_version": "3.2.0-51-generic",
+        "load_1": "4.53",
+        "load_15": "2.55",
+        "load_5": "4.01",
+        "mem_free": "397624",
+        "mem_total": "131992032",
+        "net_bond0": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "539.89",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "9.00"
+        },
+        "net_eth0": {
+            "bytes_inS": "5789.04",
+            "bytes_outS": "13931.01",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "30.59",
+            "packets_outS": "53.19"
+        },
+        "net_eth1": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_eth2": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_eth3": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "179.96",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "3.00"
+        },
+        "net_lo": {
+            "bytes_inS": "0.00",
+            "bytes_outS": "0.00",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "0.00",
+            "packets_outS": "0.00"
+        },
+        "net_tap1fb7e559-33": {
+            "bytes_inS": "1472.51",
+            "bytes_outS": "483.70",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tap581c32ec-66": {
+            "bytes_inS": "1480.10",
+            "bytes_outS": "492.10",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.20",
+            "packets_outS": "3.20"
+        },
+        "net_tap5d78521f-67": {
+            "bytes_inS": "1480.90",
+            "bytes_outS": "492.10",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.20",
+            "packets_outS": "3.20"
+        },
+        "net_tap672f5592-2a": {
+            "bytes_inS": "1472.51",
+            "bytes_outS": "483.70",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tapa85dab06-a0": {
+            "bytes_inS": "1467.91",
+            "bytes_outS": "501.30",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.00",
+            "packets_outS": "3.00"
+        },
+        "net_tapb7e5d1eb-74": {
+            "bytes_inS": "1480.90",
+            "bytes_outS": "492.10",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.20",
+            "packets_outS": "3.20"
+        },
+        "net_tapbedab9ff-1d": {
+            "bytes_inS": "1483.70",
+            "bytes_outS": "500.50",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "6.40",
+            "packets_outS": "3.40"
+        },
+        "net_total": {
+            "bytes_inS": "16127.57",
+            "bytes_outS": "18456.31",
+            "errors_inS": "0.00",
+            "errors_outS": "0.00",
+            "packets_inS": "73.59",
+            "packets_outS": "93.18"
+        },
+        "processes": "4/445",
+        "slab_reclaimable": "1179528",
+        "slab_total": "2243752",
+        "slab_unreclaimed": "1064224",
+        "swap_free": "0",
+        "swap_total": "0"
+    },
+    "time": 1377505075.526875,
+    "type": "BTC"
+}
