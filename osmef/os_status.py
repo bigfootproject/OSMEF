@@ -1,6 +1,7 @@
 import re
 
-import ssh
+import osmef.ssh as ssh
+
 
 def get_status(ip, use_namespace):
     ret = {}
@@ -15,12 +16,14 @@ def get_status(ip, use_namespace):
     ret = _versions(conn, ret)
     return ret
 
+
 def _versions(conn, out):
     # Linux bigfoot-m2 3.2.0-48-generic #74-Ubuntu SMP Thu Jun 6 19:43:26 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux
     s = conn.run(["uname", "-a"])
     s = s.split(" ")
     out["kernel_version"] = s[2]
     return out
+
 
 def _load(conn, out):
     # 2.60 2.15 2.03 5/406 32566
@@ -31,6 +34,7 @@ def _load(conn, out):
     out["load_15"] = s[2]
     out["processes"] = s[3]
     return out
+
 
 def _mem(conn, out):
     s = conn.run(["cat", "/proc/meminfo"])
@@ -53,6 +57,7 @@ def _mem(conn, out):
     m = re.search("SUnreclaim:\s+(\d+) kB", s)
     out["slab_unreclaimed"] = m.group(1)
     return out
+
 
 def _bw(conn, out):
     # unix timestamp[0];iface_name[1];bytes_out/s[2];bytes_in/s[3];bytes_total/s[4];bytes_in[5];bytes_out[6];packets_out/s[7];packets_in/s[8];packets_total/s[9];packets_in[10];packets_out[11];errors_out/s[12];errors_in/s[13];errors_in[14];errors_out[15]

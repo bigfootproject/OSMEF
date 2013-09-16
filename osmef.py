@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import argparse
 import pprint
@@ -6,8 +6,8 @@ import time
 import json
 import os
 
-import os_status
-import nuttcp
+from osmef import os_status
+from osmef import nuttcp
 
 def do_btc_host_if(args):
     out = {}
