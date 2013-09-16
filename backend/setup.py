@@ -26,7 +26,7 @@ setup(
     url = "http://www.bigfootproject.eu",   # project home page, if any
     download_url = "https://github.com/bigfootproject/OSMEF",
     test_suite='tests',
-    setup_requires=['nose>=1.0'],
+    setup_requires=['nose>=1.0', 'coverage'],
     # could also include long_description, download_url, classifiers, etc.
 )
 
