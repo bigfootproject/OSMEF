@@ -1,6 +1,6 @@
 import unittest
 
-import nuttcp
+import osmef.nuttcp as nuttcp
 
 sample_data = """nuttcp-t: v6.1.2: socket
 nuttcp-t: buflen=65536 nstream=1 port=5001 mode=tcp host=127.0.0.1

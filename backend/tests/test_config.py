@@ -1,5 +1,6 @@
 import unittest
-from config import conf_store
+
+from osmef.config import conf_store
 
 class ConfigTests(unittest.TestCase):
     def test_getopt(self):

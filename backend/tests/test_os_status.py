@@ -1,6 +1,6 @@
 import unittest
 
-import os_status
+import osmef.os_status as os_status
 
 class OsStatusTest(unittest.TestCase):
     def get_status_test(self):

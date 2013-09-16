@@ -1,6 +1,6 @@
 import unittest
 
-import ssh
+import osmef.ssh as ssh
 
 class SshTest(unittest.TestCase):
     def setUp(self):
