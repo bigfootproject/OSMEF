@@ -7,4 +7,3 @@ class OsStatusTest(unittest.TestCase):
         ret = os_status.get_status("127.0.0.1", False)
         self.assertIsNotNone(ret)
         self.assertNotEqual(len(ret), 0)
-

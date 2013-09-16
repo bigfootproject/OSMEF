@@ -49,6 +49,10 @@ The `data_processing` tools instead require Python 3.3.
 
 The plan is to port everything on Python 3, once there is a suitable SSH library.
 
+Tests
+-----
+To run unit tests use: `python setup.py nosetests`
+
 Acknowledgments
 ---------------
 The OSMeF project is part of the [BigFoot project](http://bigfootproject.eu)
