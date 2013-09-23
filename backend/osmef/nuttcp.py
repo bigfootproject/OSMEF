@@ -92,6 +92,27 @@ def run_client_thread(host, server_ip, server_port, duration, q, use_namespace):
     th.start()
     return th
 
+def run_hosts(peers, duration, keyfile):
+    server_ips = [x[0] for x in peers]
+    for ip in set(server_ips):  # remove duplicates
+        killall(ip)
+    port = CMD_PORT
+    aux = {}
+    for ip in server_ips:
+        if ip in aux:
+            aux[ip].append(aux[ip][-1] + 10)
+        else:
+            aux[ip] = [port]
+
+    servers = []
+    for ip in aux:
+        for port in aux[ip]:
+            tmp = (run_server(server_ips[idx], port, False), port) # servers listen on all available interfaces
+            servers.append(tmp)
+
+    q = Queue.Queue()
+
+
 def measure_btc_generic(server_ips, ssh_client_ips, server_listen_ips, duration, use_namespace):
     """Nuttcp has an inefficient server mode, for this reason we will run a
     server instance for each client, on a different port."""
