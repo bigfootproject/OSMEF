@@ -24,16 +24,9 @@ nuttcp-r: io_calls=22852 msec_per_call=0.05 calls_per_sec=22009.92
 nuttcp-r: stats=cpu user=0.0 system=0.6 elapsed=0:01 cpu=66% memory=0i+0d-306maxrss io=0+18pf swaps=21210+49csw
 """
 
+
 class NutTcpTest(unittest.TestCase):
-    def parse_output_test(self):
+    def test_parse_output(self):
         ret = nuttcp._parse_output(sample_data)
-        self.assertEqual(len(ret), 2)
-
-    def measure_btc_test(self):
-        ret = nuttcp.measure_btc("127.0.0.1", ["127.0.0.1"]*2, 5, False)
-        self.assertEqual(len(ret), 2)
-
-    def measure_lobtc_test(self):
-        ret = nuttcp.measure_btc_localhost("127.0.0.1", 2, 5)
         self.assertEqual(len(ret), 2)
 
