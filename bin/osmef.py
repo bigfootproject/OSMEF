@@ -1,8 +1,40 @@
 #!/usr/bin/python2
 
 import argparse
-import pprint
+import logging
 import time
+import sys
+
+import osmef.scenario
+
+
+def emit_output(out, args):
+    if args.output == "plain":
+        pprint.pprint(out)
+    elif args.output == "json":
+        fname = os.path.join(args.out_dir, "%d_%s.json" % (time.time(), out["type"]))
+        fp = open(fname, "w")
+        json.dump(out, fp, sort_keys=True, indent=4, separators=(',', ': '))
+
+arg_parser = argparse.ArgumentParser(description='OSMeF client')
+arg_parser.add_argument('-o', '--output', choices=["json", "plain"], default="plain", help="select output, default is plain")
+arg_parser.add_argument('--out_dir', default=".", help="output directory for json files, default is .")
+arg_parser.add_argument('-d', '--debug', help='enable debug output', action="store_true")
+arg_parser.add_argument('scenario', type=str, help='file containing the test sceario description')
+
+args = arg_parser.parse_args()
+if args.debug:
+    logging.basicConfig(level=logging.DEBUG)
+
+scenario = osmef.scenario.parse(args.scenario)
+results = osmef.scenario.run(scenario)
+
+emit_output(results, args)
+
+
+sys.exit(0)
+
+import pprint
 import json
 import os
 
@@ -58,14 +90,6 @@ def do_btc(args):
     print("Measuring BTC from %s to %s" % (args.sender, args.receiver))
     out["btc"] = nuttcp.measure_btc(args.receiver, [args.sender] * args.concurrent, args.duration, args.namespace)
     emit_output(out, args)
-
-def emit_output(out, args):
-    if args.output == "plain":
-        pprint.pprint(out)
-    elif args.output == "json":
-        fname = os.path.join(args.out_dir, "%d_%s.json" % (time.time(), out["type"]))
-        fp = file(fname, "w")
-        json.dump(out, fp, sort_keys=True, indent=4, separators=(',', ': '))
 
 ## Command line argument parsing
 

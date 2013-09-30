@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+#!/usr/bin/python3
+
+from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 import sys
@@ -9,7 +11,7 @@ import osmef
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = []
+        self.test_args = ["--cov=osmef", "--cov-report=term-missing"]
         self.test_suite = True
 
     def run_tests(self):
