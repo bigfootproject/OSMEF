@@ -1,20 +1,28 @@
-# These are not meant to be instantiated, ever.
-# They must be subclassed
+import time
+
 import osmef.nuttcp
 
 
 class BaseScenario:
     def __init__(self, config):
-        pass
+        self.result = {}
 
     def init(self, proto):
-        pass
+        raise NotImplementedError
 
     def run(self, proto):
-        pass
+        raise NotImplementedError
+
+    def get_result(self, proto):
+        raise NotImplementedError
 
     def end(self, proto):
-        pass
+        raise NotImplementedError
+
+    def _prefill_results(self, proto):
+        '''Called by the run method just before the measurement'''
+        self.result["state_sender"] = proto.gather_status()
+        self.result["time"] = time.time()
 
 
 class NetBTCScenario(BaseScenario):
@@ -39,7 +47,13 @@ class NetBTCScenario(BaseScenario):
         proto.nuttcp_spawn_servers(self.receivers)
 
     def run(self, proto):
-        return proto.nuttcp_measure(self.peers, self.duration)
+        self._prefill_results(proto)
+        proto.nuttcp_measure(self.peers, self.duration)
+
+    def get_result(self, proto):
+        '''Called just after the run method to ghe the fresh results asynchronously.'''
+        self.result["btc"] = proto.nuttcp_results()
+        return self.result
 
     def end(self, proto):
         proto.nuttcp_killall()
@@ -53,3 +67,5 @@ class NetBTCLocalhostScenario(NetBTCScenario):
         config["receivers"] = self.concurrency
         super().__init__(config)
 
+        self.result["type"] = "Localhost BTC"
+        self.result["concurrent"] = self.concurrency

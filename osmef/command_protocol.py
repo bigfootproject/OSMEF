@@ -5,6 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import osmef.nuttcp
+import osmef.os_status
 
 DEFAULT_PORT = 9544
 
@@ -56,11 +57,17 @@ class OSMeFClient(OSMeFProtocolBase):
     def __init__(self, sock):
         super().__init__(sock)
 
+    def gather_status(self):
+        return osmef.os_status.get_status()
+
     def nuttcp_killall(self, **kw):
         return osmef.nuttcp.killall()
 
     def nuttcp_spawn_servers(self, receivers):
         return osmef.nuttcp.spawn_servers(receivers)
+
+    def nuttcp_measure(self, peers, duration):
+        return osmef.nuttcp.measure(peers, duration)
 
 
 class OSMeFRunner(OSMeFProtocolBase):
@@ -84,6 +91,13 @@ class OSMeFRunner(OSMeFProtocolBase):
             log.error("Cannot connect to runner instance on {0}".format(ip))
             self.sock = None
 
+    def gather_status(self):
+        req = {}
+        req["call"] = "gather_status"
+        req["args"] = {}
+        self.send_object(req)
+        return self.receive_object()
+
     def nuttcp_killall(self):
         req = {}
         req["call"] = "nuttcp_killall"
@@ -98,3 +112,16 @@ class OSMeFRunner(OSMeFProtocolBase):
         req["args"]["receivers"] = receivers
         self.send_object(req)
         return self.receive_object()
+
+    def nuttcp_measure(self, peers, duration):
+        req = {}
+        req["call"] = "nuttcp_measure"
+        req["args"] = {}
+        req["args"]["peers"] = peers
+        req["args"]["duration"] = duration
+        self.send_object(req)
+        return None
+
+    def nuttcp_results(self):
+        return self.receive_object()
+

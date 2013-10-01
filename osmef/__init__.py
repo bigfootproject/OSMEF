@@ -18,8 +18,14 @@ def deploy(scenario):
 
 
 def run(runners, scenario):
+    result = {}
     _log.info("Scenario running...")
+    for runner in scenario:
+        scenario[runner].run(runners[runner])
+    for runner in scenario:
+        result[runner] = scenario[runner].get_result(runners[runner])
     _log.info("Scenario run completed")
+    return result
 
 
 def end(runners, scenario):

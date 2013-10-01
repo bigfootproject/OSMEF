@@ -4,7 +4,9 @@ import argparse
 import logging
 import pprint
 import time
+import json
 import sys
+import os
 
 import osmef.scenario.parser
 from osmef import deploy, run, end
@@ -22,6 +24,7 @@ arg_parser = argparse.ArgumentParser(description='OSMeF client')
 arg_parser.add_argument('-o', '--output', choices=["json", "plain"], default="plain", help="select output, default is plain")
 arg_parser.add_argument('--out_dir', default=".", help="output directory for json files, default is .")
 arg_parser.add_argument('-d', '--debug', help='enable debug output', action="store_true")
+arg_parser.add_argument('-n', '--name', help="name of the measurement")
 arg_parser.add_argument('scenario', type=str, help='file containing the test sceario description')
 
 args = arg_parser.parse_args()
@@ -33,18 +36,14 @@ runners = deploy(scenario)
 results = run(runners, scenario)
 end(runners, scenario)
 
+if "name" in vars(args):
+    results["name"] = args.name
+
 
 emit_output(results, args)
 
 
 sys.exit(0)
-
-import pprint
-import json
-import os
-
-from osmef import os_status
-from osmef import nuttcp
 
 def do_btc_host_if(args):
     out = {}
@@ -61,21 +60,6 @@ def do_btc_host_if(args):
     print("Gathering state for host %s" % args.server)
     out["state_sender"] = os_status.get_status(args.server, False)
     out["btc"] = nuttcp.measure_btc_generic([args.server] * args.concurrent, [args.client] * args.concurrent, [args.server_listen] * args.concurrent, args.duration, False)
-    emit_output(out, args)
-
-def do_localhost_btc(args):
-    out = {}
-    out["type"] = "Localhost BTC"
-    out["time"] = time.time()
-    out["senders"] = args.host
-    out["receiver"] = "127.0.0.1"
-    out["concurrent"] = args.concurrent
-    if "name" in args:
-        out["name"] = args.name
-    print("Gathering state for host %s" % args.host)
-    out["state_sender"] = os_status.get_status(args.host, False)
-    print("Measuring localhost BTC on %s" % (args.host,))
-    out["btc"] = nuttcp.measure_btc_localhost(args.host, args.concurrent, args.duration)
     emit_output(out, args)
 
 def do_btc(args):
@@ -102,14 +86,6 @@ arg_parser = argparse.ArgumentParser(description='Define tests')
 arg_parser.add_argument('-o', '--output', choices=["json", "plain"], default="plain", help="select output, default is plain")
 arg_parser.add_argument('--out_dir', default=".", help="output directory for json files, default is .")
 arg_subparsers = arg_parser.add_subparsers(help='sub-command help', title="subcommands")
-
-# parser for the "btc_localhost" command
-parser_lobtc = arg_subparsers.add_parser('localhost_btc', help='BTC (Bulk Transfer Capacity) measurement on localhost')
-parser_lobtc.add_argument('-d', '--duration', type=int, help='measurement duration in seconds', default=5)
-parser_lobtc.add_argument('-n', '--name', help="name of the measurement")
-parser_lobtc.add_argument('-c', '--concurrent', help="number of clients that will connect to the server at the same time", default=1, type=int)
-parser_lobtc.add_argument('host', type=str, help='receiver IP, must be in the user@ip format')
-parser_lobtc.set_defaults(func=do_localhost_btc)
 
 # parser for the "btc" command
 parser_btc = arg_subparsers.add_parser('btc', help='BTC (Bulk Transfer Capacity) measurement')

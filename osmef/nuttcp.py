@@ -55,6 +55,7 @@ def run_client(server_ip, server_port, duration, namespace):
 def _parse_output(output):
     if output is None:
         return {"res", "error"}
+    output = output.decode("ascii")
     res = {"tx": {}, "rx": {}}
     output = output.split("\n")
     if len(output[-1]) < 10:
