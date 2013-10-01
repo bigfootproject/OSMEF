@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 import argparse
 import socketserver
 import logging
+log = logging.getLogger("runner")
 
 from osmef.command_protocol import OSMeFProtoHandler, DEFAULT_PORT
 
@@ -12,6 +15,8 @@ args = arg_parser.parse_args()
 if args.debug:
     logging.basicConfig(level=logging.DEBUG)
 
+socketserver.ThreadingTCPServer.allow_reuse_address = True
 server = socketserver.ThreadingTCPServer(("0.0.0.0", args.port), OSMeFProtoHandler)
+log.info("Listening on port {0}".format(args.port))
 server.serve_forever()
 

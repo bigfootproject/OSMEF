@@ -30,3 +30,6 @@ class NutTcpTest(unittest.TestCase):
         ret = nuttcp._parse_output(sample_data)
         self.assertEqual(len(ret), 2)
 
+    def test_killall(self):
+        assert nuttcp.killall() is None
+

@@ -17,7 +17,7 @@ def killall():
     """Kill all instances
     of nuttcp running on this host.
     Needed to cleanup before and after a run."""
-    check_output(["killall", "nuttcp"])
+    call(["killall", "nuttcp"])
 
 
 def run_server(port, namespace):
@@ -91,13 +91,13 @@ def run_client_thread(server_ip, server_port, duration, q, namespace):
 
 
 def spawn_servers(ns_ports):
-    for ns, port in ns_ports:
-        log.debug("Spawning nuttcp receiver on ns {0} and port {0}".format(ns, port))
+    for port, ns in ns_ports:
+        log.debug("Spawning nuttcp receiver on ns {0} and port {1}".format(ns, port))
         run_server(port, ns)
 
 
 def measure(servers, duration):
-    q = Queue.Queue()
+    q = queue.Queue()
     clients = []
     counter = 0
     for ns, srv_ip, srv_port in servers:

@@ -34,7 +34,7 @@ setup(
 
     packages=['osmef'],
     include_package_data=True,
-    scripts=['osmef.py'],
+    scripts=['bin/osmef_client.py', 'bin/runner.py'],
 
     # Project uses reStructuredText, so ensure that the docutils get
     # installed or upgraded on the target machine

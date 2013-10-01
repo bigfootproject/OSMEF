@@ -1,11 +1,13 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import argparse
 import logging
+import pprint
 import time
 import sys
 
-import osmef.scenario
+import osmef.scenario.parser
+from osmef import deploy, run, end
 
 
 def emit_output(out, args):
@@ -26,8 +28,11 @@ args = arg_parser.parse_args()
 if args.debug:
     logging.basicConfig(level=logging.DEBUG)
 
-scenario = osmef.scenario.parse(args.scenario)
-results = osmef.scenario.run(scenario)
+scenario = osmef.scenario.parser.parse(args.scenario)
+runners = deploy(scenario)
+results = run(runners, scenario)
+end(runners, scenario)
+
 
 emit_output(results, args)
 

@@ -4,34 +4,97 @@ import json
 import logging
 log = logging.getLogger(__name__)
 
+import osmef.nuttcp
+
 DEFAULT_PORT = 9544
 
 _callbacks = {}
 
 
 class OSMeFProtoHandler(socketserver.BaseRequestHandler):
-
     def handle(self):
+        osmef_proto = OSMeFClient(self.request)
         # self.request is the TCP socket connected to the client
-        req = _receive_object(self.request)
-        log.info("handling {0} call".format(req["call"]))
-        if req["call"] in _callbacks:
-            ret = _callbacks[req["call"]](**req["args"])
-        else:
-            log.error("unknown request received: {0}".format(req["call"]))
-        _send_object(self.request, ret)
+        req = osmef_proto.receive_object()
+        while "quit" not in req:
+            log.info("handling '{0}' call".format(req["call"]))
+            try:
+                callback = getattr(osmef_proto, req["call"])
+            except AttributeError:
+                log.error("Unknown request received: {0}".format(req["call"]))
+                ret = None
+            else:
+                ret = callback(**req["args"])
+            osmef_proto.send_object(ret)
+            req = osmef_proto.receive_object()
+        log.info("Connection closed")
 
 
-def _send_object(s, obj):
-    obj_s = json.dumps(obj)
-    obj_len = "{0=-10d}".format(len(obj_s))
-    s.send(obj_len)
-    s.send(obj_s)
+class OSMeFProtocolBase:
+    def __init__(self, sock):
+        self.sock = sock
+
+    def send_object(self, obj):
+        log.debug("sending object")
+        obj_s = json.dumps(obj).encode("utf-8")
+        obj_len = "{0:0=-10d}".format(len(obj_s)).encode("utf-8")
+        self.sock.send(obj_len)
+        self.sock.send(obj_s)
+
+    def receive_object(self):
+        log.debug("receiving object")
+        obj_len = self.sock.recv(10, socket.MSG_WAITALL)
+        if len(obj_len) < 10:
+            return {"quit": True}
+        obj_len = int(obj_len.decode("utf-8"))
+        obj_s = self.sock.recv(obj_len, socket.MSG_WAITALL).decode("utf-8")
+        return json.loads(obj_s)
 
 
-def _receive_object(s):
-    obj_len = s.recv(10)
-    obj_len = int(obj_len)
-    obj_s = s.recv(obj_len, socket.MSG_WAITALL)
-    return json.loads(obj_s)
+class OSMeFClient(OSMeFProtocolBase):
+    '''For communication from a runner to the client'''
+    def __init__(self, sock):
+        super().__init__(sock)
 
+    def nuttcp_killall(self, **kw):
+        return osmef.nuttcp.killall()
+
+    def nuttcp_spawn_servers(self, receivers):
+        return osmef.nuttcp.spawn_servers(receivers)
+
+
+class OSMeFRunner(OSMeFProtocolBase):
+    ''' For communication from the client to a particular runner'''
+    def __init__(self, ip):
+        super().__init__(None)
+        self.connect(ip)
+
+    def quit(self):
+        req = {"quit": True}
+        self.send_object(req)
+        self.sock = None
+
+    def connect(self, ip):
+        log.info("Connecting to runner on {0}".format(ip))
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            self.sock.connect((ip, DEFAULT_PORT))
+        except:
+            log.error("Cannot connect to runner instance on {0}".format(ip))
+            self.sock = None
+
+    def nuttcp_killall(self):
+        req = {}
+        req["call"] = "nuttcp_killall"
+        req["args"] = {}
+        self.send_object(req)
+        return self.receive_object()
+
+    def nuttcp_spawn_servers(self, receivers):
+        req = {}
+        req["call"] = "nuttcp_spawn_servers"
+        req["args"] = {}
+        req["args"]["receivers"] = receivers
+        self.send_object(req)
+        return self.receive_object()
