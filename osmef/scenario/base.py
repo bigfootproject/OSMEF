@@ -1,7 +1,7 @@
 import time
 
 import osmef.nuttcp
-from osmef.scenario import BTC_SENDER, BTC_RECEIVER
+from osmef.scenario.types import BTC_SENDER, BTC_RECEIVER
 
 
 class BaseScenario:

@@ -2,7 +2,7 @@
 
 from osmef.scenario.recursive_dict import new
 from osmef.scenario.parser import export
-from osmef.scenario import BTC_SENDER, BTC_RECEIVER
+from osmef.scenario.types import BTC_SENDER, BTC_RECEIVER
 
 s = new()
 
