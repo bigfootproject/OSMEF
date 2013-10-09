@@ -11,8 +11,7 @@ def parse(filename):
     for runner in config:
         measure = config[runner]["measure"]
         if measure in AvailableScenarios:
-            scen = AvailableScenarios[measure](config[runner])
-            scenario[runner] = scen
+            scenario[runner] = AvailableScenarios[measure](config[runner])
         else:
             log.error("Unknown scenario {0} found in file {1}".format(measure, filename))
     return scenario
