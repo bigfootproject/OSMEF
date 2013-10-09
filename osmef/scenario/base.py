@@ -36,6 +36,7 @@ class NetBTCScenario(BaseScenario):
             for count in range(config["incoming_count"]):
                 self.receivers.append((osmef.nuttcp.CMD_PORT + count * 10, None))
         elif config["type"] == BTC_SENDER:
+            self.runner_type = BTC_SENDER
             self.peers = []
             tmp = {}
             for peer in config["receivers"]:
