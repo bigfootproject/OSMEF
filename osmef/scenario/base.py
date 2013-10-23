@@ -7,6 +7,7 @@ from osmef.scenario.types import BTC_SENDER, BTC_RECEIVER
 class BaseScenario:
     def __init__(self, config):
         self.result = {}
+        self.proto = None
 
     def init(self, proto):
         raise NotImplementedError
@@ -20,9 +21,9 @@ class BaseScenario:
     def end(self, proto):
         raise NotImplementedError
 
-    def _prefill_results(self, proto):
+    def _prefill_results(self):
         '''Called by the run method just before the measurement'''
-        self.result["state_sender"] = proto.gather_status()
+        self.result["state_sender"] = self.proto.gather_status()
         self.result["time"] = time.time()
 
 
@@ -30,12 +31,12 @@ class NetBTCScenario(BaseScenario):
     def __init__(self, config):
         super().__init__(config)
 
-        if config["type"] == BTC_RECEIVER:
+        if config["role"] == BTC_RECEIVER:
             self.runner_type = BTC_RECEIVER
             self.receivers = []
             for count in range(config["incoming_count"]):
                 self.receivers.append((osmef.nuttcp.CMD_PORT + count * 10, None))
-        elif config["type"] == BTC_SENDER:
+        elif config["role"] == BTC_SENDER:
             self.runner_type = BTC_SENDER
             self.peers = []
             tmp = {}
@@ -49,25 +50,26 @@ class NetBTCScenario(BaseScenario):
             self.duration = config["duration"]  # seconds
 
     def init(self, proto):
+        self.proto = proto
         proto.nuttcp_killall()
         if self.runner_type == BTC_RECEIVER:
             proto.nuttcp_spawn_servers(self.receivers)
 
-    def run(self, proto):
+    def run(self):
         if self.runner_type == BTC_SENDER:
-            self._prefill_results(proto)
-            proto.nuttcp_measure(self.peers, self.duration)
+            self._prefill_results()
+            self.proto.nuttcp_measure(self.peers, self.duration)
 
-    def get_result(self, proto):
+    def get_result(self):
         '''Called just after the run method to get the fresh results asynchronously.'''
         if self.runner_type == BTC_SENDER:
-            self.result["btc"] = proto.nuttcp_results()
+            self.result["btc"] = self.proto.nuttcp_results()
             return self.result
         else:
             return None
 
-    def end(self, proto):
-        proto.nuttcp_killall()
+    def end(self):
+        self.proto.nuttcp_killall()
 
 
 class NetBTCLocalhostScenario(BaseScenario):

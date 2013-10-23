@@ -1,36 +1,35 @@
 import logging
 _log = logging.getLogger(__name__)
 
-import osmef.command_protocol
-
 __version__ = "0.2"
 
 
 def deploy(scenario):
-    runners = {}
     for runner in scenario:
-        pr = osmef.command_protocol.OSMeFRunner(runner)
-        runners[runner] = pr
+        _log.info("Spawning runner %s" % runner.name)
+        runner.spawn()
+    for runner in scenario:
+        _log.info("Connecting to runner %s" % runner.name)
+        runner.connect()
         _log.info("Initializing scenario on runner {0}".format(runner))
-        scenario[runner].init(pr)
+        runner.scenario_init()
     _log.info("Scenario deployment completed")
-    return runners
 
 
-def run(runners, scenario):
-    result = {}
+def run(scenario):
+    results = {}
     _log.info("Scenario running...")
     for runner in scenario:
-        scenario[runner].run(runners[runner])
+        runner.scenario_run()
     for runner in scenario:
-        result[runner] = scenario[runner].get_result(runners[runner])
+        results[runner.name] = runner.scenario_get_results()
     _log.info("Scenario run completed")
-    return result
+    return results
 
 
-def end(runners, scenario):
+def end(scenario):
     for runner in scenario:
-        scenario[runner].end(runners[runner])
-        runners[runner].quit()
+        runner.scenario_end()
+        runner.scenario_end()
     _log.info("Cleanup completed")
 
