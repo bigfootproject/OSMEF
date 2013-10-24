@@ -1,6 +1,7 @@
 import socketserver
 import socket
 import json
+import sys
 import logging
 log = logging.getLogger(__name__)
 
@@ -8,8 +9,6 @@ import osmef.nuttcp
 import osmef.os_status
 
 DEFAULT_PORT = 9544
-
-_callbacks = {}
 
 
 class OSMeFProtoHandler(socketserver.BaseRequestHandler):
@@ -57,6 +56,10 @@ class OSMeFClient(OSMeFProtocolBase):
     def __init__(self, sock):
         super().__init__(sock)
 
+    def exit(self):
+        log.info("exit message, ending execution")
+        sys.exit(0)
+
     def gather_status(self):
         return osmef.os_status.get_status()
 
@@ -75,6 +78,14 @@ class OSMeFRunner(OSMeFProtocolBase):
     def __init__(self, ip):
         super().__init__(None)
         self.connect(ip)
+
+    def exit(self):
+        req = {}
+        req["call"] = "exit"
+        req["args"] = {}
+        self.send_object(req)
+        self.sock = None
+        return
 
     def quit(self):
         req = {"quit": True}

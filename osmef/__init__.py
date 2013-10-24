@@ -30,6 +30,5 @@ def run(scenario):
 def end(scenario):
     for runner in scenario:
         runner.scenario_end()
-        runner.scenario_end()
     _log.info("Cleanup completed")
 
