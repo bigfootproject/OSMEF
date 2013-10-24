@@ -4,6 +4,8 @@ import argparse
 import socketserver
 import logging
 log = logging.getLogger("runner")
+import os, sys
+sys.path += [os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))]
 
 from osmef.command_protocol import OSMeFProtoHandler, DEFAULT_PORT
 
