@@ -1,6 +1,7 @@
 import os
 from subprocess import call
 import logging
+import glob
 
 from osmef.command_protocol import OSMeFRunner
 
@@ -35,13 +36,13 @@ class BaseRunner:
     def spawn(self):
         osmef_dir = os.path.basename(os.path.abspath(__file__))
         osmef_dir = os.path.abspath(os.path.join(osmef_dir, ".."))
-        cmd = ["ssh", "-i", self.config["ssh_key"], "{0}@{1}".format(self.config["ssh_user"], self.config["ip"]), "mkdir", "-f", "/tmp/osmef"]
+        cmd = ["ssh", "-i", self.config["ssh_key"], "{0}@{1}".format(self.config["ssh_user"], self.config["ip"]), "mkdir", "-p", "/tmp/osmef"]
         call(cmd)
         log.debug("Copying OSMeF files to %s" % self.config["ip"])
-        cmd = ["scp", "-r", "-i", self.config["ssh_key"], osmef_dir + "/*", "{0}@{1}:/tmp/osmef".format(self.config["ssh_user"], self.config["ip"])]
+        cmd = ["scp", "-rq", "-i", self.config["ssh_key"]] + glob.glob(osmef_dir + "/*") + ["{0}@{1}:/tmp/osmef".format(self.config["ssh_user"], self.config["ip"])]
         call(cmd)
         log.debug("Remotely executing runner %s" % self.name)
-        cmd = ["ssh", "-i", self.config["ssh_key"], "{0}@{1}".format(self.config["ssh_user"], self.config["ip"]), "/tmp/osmef/bin/runner.py"]
+        cmd = ["ssh", "-i", self.config["ssh_key"], "{0}@{1}".format(self.config["ssh_user"], self.config["ip"]), "python3 /tmp/osmef/bin/runner.py"]
         call(cmd)
 
     def connect(self):
