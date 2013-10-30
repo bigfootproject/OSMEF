@@ -110,6 +110,7 @@ def measure(servers, duration):
     counter = 1
     for th in clients:
         th.join()
+        log.debug("Child thread joined")
         results["conn_%d" % counter] = q.get()
         counter += 1
     return results
