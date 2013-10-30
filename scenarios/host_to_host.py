@@ -1,9 +1,8 @@
 #!/usr/bin/python
 import logging
 log = logging.getLogger(__name__)
-import sys, os
+import os, sys
 sys.path += [os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))]
-
 
 import osmef.runner
 from osmef.client import osmef_run

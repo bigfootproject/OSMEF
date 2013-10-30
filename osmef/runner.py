@@ -2,6 +2,7 @@ import os
 from subprocess import call
 import logging
 import glob
+from threading import Thread
 
 from osmef.command_protocol import OSMeFRunner
 
@@ -23,6 +24,7 @@ class BaseRunner:
         self.measurement = None
         self.config = {}
         self.proto = None
+        self.runner_threads = []
 
     def set_config(self, config):
         required_settings = ["ip", "ssh_user", "ssh_key", "role"]
@@ -43,7 +45,9 @@ class BaseRunner:
         call(cmd)
         log.debug("Remotely executing runner %s" % self.name)
         cmd = ["ssh", "-i", self.config["ssh_key"], "{0}@{1}".format(self.config["ssh_user"], self.config["ip"]), "python3 /tmp/osmef/bin/runner.py"]
-        call(cmd)
+        th = Thread(target=call, args=(cmd,))
+        self.runner_threads.append(th)
+        th.start()
 
     def connect(self):
         log.debug("Connecting to runner %s" % self.name)
@@ -59,7 +63,11 @@ class BaseRunner:
         return self.measurement.get_results()
 
     def scenario_end(self):
-        self.measurement.quit()
+# FIXME a scenario should be able to be run multiple times before being destroyed
+#        self.measurement.quit()
+        self.scenario.exit()
+        for th in self.runner_threads:
+            th.join()
 
 
 class HostRunner(BaseRunner):
