@@ -10,6 +10,19 @@ import osmef.nuttcp
 import osmef.os_status
 
 DEFAULT_PORT = 9544
+runner_quit = False
+
+
+def run_server(port):
+    global runner_quit
+    socketserver.TCPServer.allow_reuse_address = True
+    server = socketserver.TCPServer(("0.0.0.0", port), OSMeFProtoHandler)
+    log.info("Listening on port {0}".format(port))
+    while True:
+        server.handle_request()
+        log.debug("Checking runner_quit flag")
+        if runner_quit:
+            break
 
 
 class OSMeFProtoHandler(socketserver.BaseRequestHandler):
@@ -30,7 +43,7 @@ class OSMeFProtoHandler(socketserver.BaseRequestHandler):
             req = osmef_proto.receive_object()
         log.info("Connection closed")
         if "exit" in req:
-            self.osmef_proto.exit()
+            osmef_proto.exit()
 
 
 class OSMeFProtocolBase:
@@ -61,8 +74,9 @@ class OSMeFClient(OSMeFProtocolBase):
         super().__init__(sock)
 
     def exit(self):
+        global runner_quit
         log.info("exit message, ending execution")
-        sys.exit(0)
+        runner_quit = True
 
     def gather_status(self):
         return osmef.os_status.get_status()
