@@ -65,7 +65,7 @@ class BaseRunner:
     def scenario_end(self):
 # FIXME a scenario should be able to be run multiple times before being destroyed
 #        self.measurement.quit()
-        self.measurement.exit()
+        self.measurement.end()
         for th in self.runner_threads:
             th.join()
 
