@@ -60,7 +60,7 @@ class BaseRunner:
         self.measurement.run()
 
     def scenario_get_results(self):
-        return self.measurement.get_results()
+        return self.measurement.get_result()
 
     def scenario_end(self):
 # FIXME a scenario should be able to be run multiple times before being destroyed
