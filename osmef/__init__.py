@@ -11,7 +11,7 @@ def deploy(scenario):
     for runner in scenario:
         _log.info("Connecting to runner %s" % runner.name)
         runner.connect()
-        _log.info("Initializing scenario on runner {0}".format(runner))
+        _log.info("Initializing scenario on runner {0}".format(runner.name))
         runner.scenario_init()
     _log.info("Scenario deployment completed")
 

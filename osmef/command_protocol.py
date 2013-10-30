@@ -36,7 +36,7 @@ class OSMeFProtocolBase:
         self.sock = sock
 
     def send_object(self, obj):
-        log.debug("sending object")
+        log.debug("sending object ({0})".format(obj))
         obj_s = json.dumps(obj).encode("utf-8")
         obj_len = "{0:0=-10d}".format(len(obj_s)).encode("utf-8")
         self.sock.send(obj_len)
@@ -105,7 +105,7 @@ class OSMeFRunner(OSMeFProtocolBase):
             except:
 #                log.error("Cannot connect to runner instance on {0}".format(ip))
 #                log.error(str(e))
-                log.info("Waitin for runner to come up")
+                log.info("Waiting for runner to come up")
                 time.sleep(0.5)
                 retries -= 1
             else:
