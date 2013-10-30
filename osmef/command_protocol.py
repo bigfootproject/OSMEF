@@ -1,6 +1,7 @@
 import socketserver
 import socket
 import json
+import time
 import sys
 import logging
 log = logging.getLogger(__name__)
@@ -96,11 +97,21 @@ class OSMeFRunner(OSMeFProtocolBase):
         log.info("Connecting to runner on {0}".format(ip))
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        try:
-            self.sock.connect((ip, DEFAULT_PORT))
-        except Exception as e:
+        connected = False
+        retries = 5
+        while not connected and retries > 0:
+            try:
+                self.sock.connect((ip, DEFAULT_PORT))
+            except:
+#                log.error("Cannot connect to runner instance on {0}".format(ip))
+#                log.error(str(e))
+                log.info("Waitin for runner to come up")
+                time.sleep(0.5)
+                retries -= 1
+            else:
+                connected = True
+        if not connected:
             log.error("Cannot connect to runner instance on {0}".format(ip))
-            log.error(str(e))
             self.sock = None
 
     def gather_status(self):
