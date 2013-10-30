@@ -98,8 +98,9 @@ class OSMeFRunner(OSMeFProtocolBase):
 
         try:
             self.sock.connect((ip, DEFAULT_PORT))
-        except:
+        except Exception as e:
             log.error("Cannot connect to runner instance on {0}".format(ip))
+            log.error(str(e))
             self.sock = None
 
     def gather_status(self):
