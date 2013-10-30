@@ -17,7 +17,7 @@ class OSMeFProtoHandler(socketserver.BaseRequestHandler):
         osmef_proto = OSMeFClient(self.request)
         # self.request is the TCP socket connected to the client
         req = osmef_proto.receive_object()
-        while "quit" not in req:
+        while "quit" not in req and "exit" not in req:
             log.info("handling '{0}' call".format(req["call"]))
             try:
                 callback = getattr(osmef_proto, req["call"])
@@ -83,8 +83,7 @@ class OSMeFRunner(OSMeFProtocolBase):
 
     def exit(self):
         req = {}
-        req["call"] = "exit"
-        req["args"] = {}
+        req["exit"] = True
         self.send_object(req)
         self.sock = None
         return
