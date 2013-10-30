@@ -29,6 +29,8 @@ class OSMeFProtoHandler(socketserver.BaseRequestHandler):
             osmef_proto.send_object(ret)
             req = osmef_proto.receive_object()
         log.info("Connection closed")
+        if "exit" in req:
+            self.osmef_proto.exit()
 
 
 class OSMeFProtocolBase:

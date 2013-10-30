@@ -17,8 +17,8 @@ arg_parser.add_argument('-p', '--port', type=int, help='Port to listen to for in
 args = arg_parser.parse_args()
 logging.basicConfig(level=logging.DEBUG, filename=os.path.join(osmef_dir, "runner.log"), filmode="w")
 
-socketserver.ThreadingTCPServer.allow_reuse_address = True
-server = socketserver.ThreadingTCPServer(("0.0.0.0", args.port), OSMeFProtoHandler)
+socketserver.TCPServer.allow_reuse_address = True
+server = socketserver.TCPServer(("0.0.0.0", args.port), OSMeFProtoHandler)
 log.info("Listening on port {0}".format(args.port))
 server.serve_forever()
 
