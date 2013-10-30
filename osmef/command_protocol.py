@@ -43,13 +43,14 @@ class OSMeFProtocolBase:
         self.sock.send(obj_s)
 
     def receive_object(self):
-        log.debug("receiving object")
         obj_len = self.sock.recv(10, socket.MSG_WAITALL)
         if len(obj_len) < 10:
             return {"quit": True}
         obj_len = int(obj_len.decode("utf-8"))
         obj_s = self.sock.recv(obj_len, socket.MSG_WAITALL).decode("utf-8")
-        return json.loads(obj_s)
+        obj = json.loads(obj_s)
+        log.debug("received object ({0})".format(obj))
+        return obj
 
 
 class OSMeFClient(OSMeFProtocolBase):
