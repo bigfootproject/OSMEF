@@ -70,6 +70,8 @@ class NetBTCScenario(BaseScenario):
 
     def end(self):
         self.proto.nuttcp_killall()
+        self.proto.exit()
+        self.proto = None
 
 
 class NetBTCLocalhostScenario(BaseScenario):
