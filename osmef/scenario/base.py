@@ -12,13 +12,13 @@ class BaseScenario:
     def init(self, proto):
         raise NotImplementedError
 
-    def run(self, proto):
+    def run(self):
         raise NotImplementedError
 
-    def get_result(self, proto):
+    def get_result(self):
         raise NotImplementedError
 
-    def end(self, proto):
+    def end(self):
         raise NotImplementedError
 
     def _prefill_results(self):
@@ -49,6 +49,8 @@ class NetBTCScenario(BaseScenario):
                 self.peers.append((None, peer, osmef.nuttcp.CMD_PORT + tmp[peer] * 10))
             self.duration = config["duration"]  # seconds
 
+        self.result["type"] = "Network BTC"
+
     def init(self, proto):
         self.proto = proto
         proto.nuttcp_killall()
@@ -77,6 +79,7 @@ class NetBTCScenario(BaseScenario):
 class NetBTCLocalhostScenario(BaseScenario):
     def __init__(self, config):
         super().__init__(config)
+        self.proto = None
         self.receivers = []
         for count in range(config["concurrency"]):
             self.receivers.append((osmef.nuttcp.CMD_PORT + count * 10, None))
@@ -93,17 +96,20 @@ class NetBTCLocalhostScenario(BaseScenario):
         self.result["concurrent"] = config["concurrency"]
 
     def init(self, proto):
-        proto.nuttcp_killall()
-        proto.nuttcp_spawn_servers(self.receivers)
+        self.proto = proto
+        self.proto.nuttcp_killall()
+        self.proto.nuttcp_spawn_servers(self.receivers)
 
-    def run(self, proto):
-        self._prefill_results(proto)
-        proto.nuttcp_measure(self.peers, self.duration)
+    def run(self):
+        self._prefill_results()
+        self.proto.nuttcp_measure(self.peers, self.duration)
 
-    def get_result(self, proto):
+    def get_result(self):
         '''Called just after the run method to get the fresh results asynchronously.'''
-        self.result["btc"] = proto.nuttcp_results()
+        self.result["btc"] = self.proto.nuttcp_results()
         return self.result
 
-    def end(self, proto):
-        proto.nuttcp_killall()
+    def end(self):
+        self.proto.nuttcp_killall()
+        self.proto.exit()
+        self.proto = None

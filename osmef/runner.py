@@ -27,7 +27,7 @@ class BaseRunner:
         self.runner_threads = []
 
     def set_config(self, config):
-        required_settings = ["ip", "ssh_user", "ssh_key", "role"]
+        required_settings = ["ip", "ssh_user", "ssh_key"]
         for s in required_settings:
             if s not in config:
                 log.error("Missing required config entry '%s'" % s)
