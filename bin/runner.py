@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import argparse
-import socketserver
 import logging
 log = logging.getLogger("runner")
 import os

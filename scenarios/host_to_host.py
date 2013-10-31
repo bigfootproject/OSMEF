@@ -39,6 +39,5 @@ scenario = [r1, r2]
 results = osmef_run(scenario)
 
 # TODO temporary...
-import pprint
-pprint.pprint(results)
+print(results)
 
