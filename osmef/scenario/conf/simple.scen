@@ -1,0 +1,15 @@
+[description]
+name = simple
+total_shuffle_size = 1 # in GB
+num_vms = 2
+
+[vm1]
+zone = bigfoot1
+num_mappers = 3
+num_reducers = 1
+
+[vm2]
+zone = bigfoot2
+num_mappers = 4
+num_reducers = 0
+
