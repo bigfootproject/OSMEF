@@ -16,7 +16,10 @@ class OpenStack:
         for vm in vm_setup:
             ret = openstack_api.compute.find_instance(creds, vm["name"])
             if ret is None:
+                log.info("Spawning new VM '%s'" % vm["name"])
                 ret = openstack_api.compute.create_server(creds, vm["name"], vm["flavor"], vm["image"], vm["zone"], vm["key"])
+            else:
+                log.info("Reusing existing VM '%s'" % vm["name"])
             vm["instance"] = ret
         while True:
             wait = False
@@ -25,6 +28,9 @@ class OpenStack:
                     vm["instance"] = openstack_api.compute.refresh_instance(creds, vm["instance"])
                     log.debug("VM '%s' not yet ready" % vm["name"])
                     wait = True
+                elif "ip" not in vm:
+                    vm["ip"] = openstack_api.compute.get_floating_ip(creds, vm["instance"])
+                    log.debug("VM '%s' is READY, floating IP is %s" % (vm['name'], vm["ip"]))
             if wait:
                 time.sleep(5)
             else:
