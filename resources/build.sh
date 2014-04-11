@@ -4,6 +4,7 @@ if [ -z $1 ]; then
 	DIR=/tmp
 else
 	DIR=.
+	CFLAGS=-g
 fi
 
 CC=`which gcc`
@@ -12,6 +13,6 @@ if [ -z $CC ]; then
 	exit
 fi
 
-gcc -Wall $DIR/worker.c -pthread -o $DIR/worker
+gcc -Wall $CFLAGS $DIR/worker.c -pthread -o $DIR/worker
 md5sum $DIR/worker.c > $DIR/osmef_worker_version
 

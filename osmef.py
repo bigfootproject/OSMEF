@@ -18,6 +18,7 @@ args = arg_parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("novaclient").setLevel(logging.INFO)
+logging.getLogger("osmef.ssh").setLevel(logging.INFO)
 
 sm = parser.ScenarioManager()
 
@@ -29,7 +30,9 @@ if args.scenario == "list" or args.scenario not in sm.list_available():
 
 sm.select(args.scenario)
 
-# ...
+sm.start()
+
+sm.scenario_end()
 
 if not args.not_delete:
     sm.cleanup()

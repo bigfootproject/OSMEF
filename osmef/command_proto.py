@@ -1,30 +1,74 @@
+import logging
+log = logging.getLogger(__name__)
 import socket
 import struct
 
 CMD_LISTEN_PORT = 2333
 
-MSG_FMT = "!I1024s"
-CMD_EXIT = 0
-CMD_INIT = 1
-CMD_NODES = 2
+commands = {
+    'CMD_EXIT': 0,
+    'CMD_INIT': 1,
+    'CMD_NODES': 2,
+    'CMD_MAPPER': 3,
+    'CMD_REDUCER': 4,
+    'CMD_START': 5
+}
 
 
 def _connect_worker(vm):
     vm["conn"] = socket.create_connection((vm["ip"], 2333))
 
 
-def _send_msg(s, cmd, data):
-    msg = struct.pack(MSG_FMT, cmd, bytes(data, "ASCII"))
-    s.send(msg)
+def _send_msg(vm, cmd, data):
+    log.debug("Sending command {} to '{}'".format(cmd, vm["name"]))
+    msg = "{}|{}".format(commands[cmd], data)
+    print(msg)
+    if len(msg) > 1024:
+        log.error("Sending message longer than 1024 bytes, it will be truncated")
+    msg = struct.pack("1024s", bytes(msg, "ASCII"))
+    vm["conn"].send(msg)
+
+
+def _recv_reply(vm):
+    data = vm["conn"].recv(1024)
+    data = struct.unpack("1024s", data)[0]
+    data = bytearray(data)
+    term = data.index(bytes('\x00', "ASCII"))
+    data = data[0:term].decode("ASCII")
+    return data
+
+
+def _recv_done(vm):
+    rep = _recv_reply(vm)
+    if rep == "DONE":
+        return True
+    else:
+        log.error("Expecting DONE, got {}".format(rep))
+        return False
 
 
 def init(vm_setup):
     for vm in vm_setup:
         _connect_worker(vm)
-        _send_msg(vm["conn"], CMD_INIT, "")
-        _send_msg(vm["conn"], CMD_NODES, str(vm["num_reducers"] + vm["num_mappers"]))
+        _send_msg(vm, "CMD_INIT", "")
+        _send_msg(vm, "CMD_NODES", "{},{}".format(vm["num_mappers"], vm["num_reducers"]))
+        _recv_done(vm)
+        for m in vm["mappers"]:
+            msg = m.to_str()
+            _send_msg(vm, "CMD_MAPPER", msg)
+            _recv_done(vm)
+        for r in vm["reducers"]:
+            msg = r.to_str()
+            _send_msg(vm, "CMD_REDUCER", msg)
+
+
+def start_measurement(vm_setup):
+    for vm in vm_setup:
+        _send_msg(vm, "CMD_START", "")
+    for vm in vm_setup:
+        _recv_done(vm)
 
 
 def end(vm_setup):
     for vm in vm_setup:
-        _send_msg(vm["conn"], CMD_EXIT, "")
+        _send_msg(vm, "CMD_EXIT", "")
