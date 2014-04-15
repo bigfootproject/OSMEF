@@ -18,6 +18,8 @@ class ScenarioManager:
         self.active = None
         self.vm_setup = []
         self.openstack = osmef.openstack.OpenStack(openstack_conffile)
+        self.all_mappers = []
+        self.all_reducers = []
 
     def _scan(self):
         for f in os.listdir(self.scenario_dir):
@@ -70,37 +72,36 @@ class ScenarioManager:
         osmef.command_proto.init(self.vm_setup)
 
     def distribute_workload(self):
-        total_mappers = 0
-        total_reducers = 0
-        mapper_ips = []
         for vm in self.vm_setup:
             vm["mappers"] = []
             vm["reducers"] = []
-            total_reducers += vm["num_reducers"]
-            total_mappers += vm["num_mappers"]
             for i in range(vm["num_mappers"]):
                 # mapper IP, number of incoming connections, bytes assigned to this mapper, listen port, num_reducers
                 m = osmef.nodes.Mapper()
+                m.name = vm["name"] + ":m{}".format(i)
                 m.ip = vm["ip"]
                 m.max_incoming_conn = int(self.active.get("node", "num_conn_rx"))
                 m.port = vm["base_mapper_port"] + i
                 vm["mappers"].append(m)
-                mapper_ips.append((m.ip, m.port))
+                self.all_mappers.append(m)
             for i in range(vm["num_reducers"]):
                 r = osmef.nodes.Reducer()
+                r.name = vm["name"] + ":r{}".format(i)
                 r.max_outgoing_conn = int(self.active.get("node", "num_conn_tx"))
                 # list of mapper IPs, number of outgoing connections
                 vm["reducers"].append(r)
+                self.all_reducers.append(r)
 
         shuffle_size = int(self.active.get("description", "total_shuffle_size")) * 1024 * 1024 * 1024
-        per_mapper_size = shuffle_size / total_mappers
-        per_reducer_size = per_mapper_size / total_reducers
+        per_mapper_size = shuffle_size / len(self.all_mappers)
+        per_reducer_size = per_mapper_size / len(self.all_reducers)
 
         for vm in self.vm_setup:
             for m in vm["mappers"]:
-                m.reducer_sizes = [per_reducer_size] * total_reducers
+                m.all_reducers = self.all_reducers
             for r in vm["reducers"]:
-                r.mapper_ips = mapper_ips
+                r.all_mappers = self.all_mappers
+                r.data_size = per_reducer_size
 
     def start(self):
         osmef.command_proto.start_measurement(self.vm_setup)
@@ -115,6 +116,8 @@ class ScenarioManager:
         if self.active is None:
             return
 
+        self.all_mappers = []
+        self.all_reducers = []
         self.openstack.terminate_vms(self.vm_setup)
         self.active = None
 
