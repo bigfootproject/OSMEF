@@ -15,13 +15,13 @@ class Mapper:
 
 class Reducer:
     def __init__(self):
-        self.max_outgoing_connections = 0
+        self.max_outgoing_conn = 0
         self.all_mappers = []
         self.name = ""
         self.data_size = 0
 
     def to_str(self):
-        s = "{},{},{}".format(self.name, self.max_outgoing_connections, len(self.all_mappers))
+        s = "{},{},{}".format(self.name, self.max_outgoing_conn, len(self.all_mappers))
         for m in self.all_mappers:
                 s += ",{},{},{}".format(m.name, m.port, m.ip)
         return s

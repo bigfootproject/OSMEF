@@ -227,14 +227,25 @@ void* mapper(void* vargs)
 		int peer_s, found = -1;
 		char peer_name[NAME_LEN];
 		socklen_t peer_addr_len;
-		fprintf(logfp, "(%s) Current connection count: %d\n", args->name, current_conn_count);
+//		fprintf(logfp, "(%s) Current connection count: %d\n", args->name, current_conn_count);
 
 		if (to_start > 0 && current_conn_count < args->num_concurrent_conn) {
+			peer_addr_len = sizeof(struct sockaddr_in);
 			peer_s = accept(s, (struct sockaddr*)&peer_addr, &peer_addr_len);
+			if (peer_s < 0) {
+				fprintf(logfp, "(%s) accept error: %s\n", args->name, strerror(errno));
+				continue;
+			}
 
 			to_start--;
 			current_conn_count++;
 			ret = recv(peer_s, peer_name, NAME_LEN, 0);
+			if (ret < NAME_LEN) {
+				fprintf(logfp, "(%s) --> Short recv while reading the reducer name\n", args->name);
+				if (ret < 0) {
+					fprintf(logfp, "(%s) recv error: %s\n", args->name, strerror(errno));
+				}
+			}
 			// Look for the data for this reducer
 			for (i = 0; i < args->num_reducers; i++) {
 				if (strncmp(peer_name, reducers[i]->reducer_name, NAME_LEN) == 0) {
@@ -243,7 +254,7 @@ void* mapper(void* vargs)
 				}
 			}
 			if (found < 0) {
-				fprintf(logfp, "(%s) Got connection from unknown reducer %s\n", args->name, peer_name);
+				fprintf(logfp, "(%s) Got connection from unknown reducer '%s'\n", args->name, peer_name);
 				close(peer_s);
 				continue;
 			}
@@ -254,8 +265,8 @@ void* mapper(void* vargs)
 				if (conn_threads[i].free) {
 					reducers[found]->s = peer_s;
 					snprintf(reducers[found]->name, NAME_LEN, "%s:%d", args->name, found);
-					pthread_create(&conn_threads[found].th, NULL, mapper_connection, reducers[found]);
 					conn_threads[i].free = 0;
+					pthread_create(&conn_threads[found].th, NULL, mapper_connection, reducers[found]);
 					break;
 				}
 			}
@@ -365,7 +376,7 @@ void* reducer(void* vargs)
 	struct reducer_conn_thread* conns;
 	struct reducer_connection_args* mappers;
 	struct measurement* result;
-	int i, ret, remaining, conn_count = 0, next_mapper = 0;
+	int i, ret, to_start, remaining, conn_count = 0, next_mapper = 0;
 	sem_t th_completion_sem;
 
 	fprintf(logfp, "(%s) Reducer thread started\n", args->name);
@@ -390,7 +401,7 @@ void* reducer(void* vargs)
 	result = malloc(sizeof(struct measurement));
 	strncpy(result->th_name, args->name, NAME_LEN);
 
-	remaining = args->num_mappers;
+	to_start = remaining = args->num_mappers;
 
 	sem_init(&th_completion_sem, 0, 0);
 
@@ -402,17 +413,19 @@ void* reducer(void* vargs)
 	fprintf(logfp, "(%s) got START message\n", args->name);
 
 	while (remaining > 0) {
-		for (i = 0; i < args->num_concurrent_conn; i++) {
-			if (conns[i].free && next_mapper < args->num_mappers) {
-				fprintf(logfp, "(%s) Starting new connection thread\n", args->name);
-				mappers[next_mapper].id = i;
-				pthread_create(&conns[i].th, NULL, reducer_connection, &mappers[next_mapper]);
-				conns[i].free = 0;
-				conn_count++;
-				next_mapper++;
+		if (to_start > 0 && conn_count < args->num_concurrent_conn) {
+			fprintf(logfp, "(%s) Starting new connection thread\n", args->name);
+			i = 0;
+			while (!conns[i].free) {
+				i++;
 			}
-		}
-		if (conn_count >= args->num_concurrent_conn) {
+			mappers[next_mapper].id = i;
+			conns[i].free = 0;
+			pthread_create(&conns[i].th, NULL, reducer_connection, &mappers[next_mapper]);
+			conn_count++;
+			next_mapper++;
+			to_start--;
+		} else {
 			fprintf(logfp, "(%s) Maximum number of connections reached (%d), waiting for a thread to finish\n", args->name, conn_count);
 			sem_wait(&th_completion_sem);
 			i = 0;

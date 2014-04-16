@@ -44,7 +44,7 @@ def _upload_worker(vm):
 
 def start_workers(vm_setup):
     for vm in vm_setup:
-        _run_remote_command(vm, "killall -q %s" % WORKER_EXECUTABLE)
+        _run_remote_command(vm, "killall -q -KILL %s" % WORKER_EXECUTABLE)
         _run_remote_command(vm, "/tmp/%s" % WORKER_EXECUTABLE)
 
 

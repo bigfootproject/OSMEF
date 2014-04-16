@@ -29,8 +29,13 @@ class OpenStack:
                     log.debug("VM '%s' not yet ready" % vm["name"])
                     wait = True
                 elif "ip" not in vm:
+                    vm["private_ip"] = openstack_api.compute.get_private_ip(creds, vm["instance"])
                     vm["ip"] = openstack_api.compute.get_floating_ip(creds, vm["instance"])
-                    log.debug("VM '%s' is READY, floating IP is %s" % (vm['name'], vm["ip"]))
+                    if len(vm["private_ip"]) == 1:
+                        vm["private_ip"] = vm["private_ip"][0]
+                    elif vm["ip"] in vm["private_ip"]:
+                        vm["private_ip"] = [ip for ip in vm["private_ip"] if ip != vm["ip"]][0]
+                    log.debug("VM '%s' is READY, private IP is %s, floating IP is %s" % (vm['name'], vm["private_ip"], vm["ip"]))
             if wait:
                 time.sleep(5)
             else:

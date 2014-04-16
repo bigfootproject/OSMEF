@@ -12,34 +12,31 @@ logging.basicConfig(level=logging.DEBUG)
 
 fake_vm = {"ip": sys.argv[1]}
 fake_vm["name"] = "fake_vm"
-fake_vm["num_reducers"] = 1
-fake_vm["num_mappers"] = 2
+fake_vm["num_reducers"] = 2
+fake_vm["num_mappers"] = 6
 fake_vm["mappers"] = []
 fake_vm["reducers"] = []
 
-m1 = osmef.nodes.Mapper()
-m1.name = "vm1:m0"
-m1.port = 23330
-m1.max_incoming_conn = 40
-m1.ip = "127.0.0.1"
-fake_vm["mappers"].append(m1)
+for i in range(fake_vm["num_mappers"]):
+    m = osmef.nodes.Mapper()
+    m.name = "vm1:m%d" % i
+    m.port = 23330 + i
+    m.max_incoming_conn = 40
+    m.ip = "127.0.0.1"
+    fake_vm["mappers"].append(m)
 
-m2 = osmef.nodes.Mapper()
-m2.name = "vm1:m1"
-m2.port = 23331
-m2.max_incoming_conn = 40
-m2.ip = "127.0.0.1"
-fake_vm["mappers"].append(m2)
+for i in range(fake_vm["num_reducers"]):
+    r = osmef.nodes.Reducer()
+    r.name = "vm1:r%d" % i
+    r.max_outgoing_conn = 4
+    r.data_size = 20960000
+    fake_vm["reducers"].append(r)
 
-r1 = osmef.nodes.Reducer()
-r1.name = "vm1:r0"
-r1.max_outgoing_connections = 1
-r1.data_size = 4096
-fake_vm["reducers"].append(r1)
+for m in fake_vm["mappers"]:
+    m.all_reducers = fake_vm["reducers"]
 
-m1.all_reducers = [r1]
-m2.all_reducers = [r1]
-r1.all_mappers = [m1, m2]
+for r in fake_vm["reducers"]:
+    r.all_mappers = fake_vm["mappers"]
 
 osmef.command_proto.init([fake_vm])
 osmef.command_proto.start_measurement([fake_vm])

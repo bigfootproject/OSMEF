@@ -48,3 +48,10 @@ def get_floating_ip(creds, instance):
     log.info("Associating floating IP to VM '%s'" % instance.name)
     instance.add_floating_ip(addr)
     return addr.ip
+
+
+def get_private_ip(creds, instance):
+    '''Returns the first network list of addresses'''
+    for net in instance.networks:
+        return instance.networks[net]
+

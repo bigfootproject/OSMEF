@@ -79,7 +79,7 @@ class ScenarioManager:
                 # mapper IP, number of incoming connections, bytes assigned to this mapper, listen port, num_reducers
                 m = osmef.nodes.Mapper()
                 m.name = vm["name"] + ":m{}".format(i)
-                m.ip = vm["ip"]
+                m.ip = vm["private_ip"]
                 m.max_incoming_conn = int(self.active.get("node", "num_conn_rx"))
                 m.port = vm["base_mapper_port"] + i
                 vm["mappers"].append(m)
@@ -101,7 +101,7 @@ class ScenarioManager:
                 m.all_reducers = self.all_reducers
             for r in vm["reducers"]:
                 r.all_mappers = self.all_mappers
-                r.data_size = per_reducer_size
+                r.data_size = int(per_reducer_size)
 
     def start(self):
         osmef.command_proto.start_measurement(self.vm_setup)
