@@ -71,5 +71,5 @@ def get_worker_logs(vm_setup):
     cmd = "cat /tmp/osmef_worker.log"
     logs = {}
     for vm in vm_setup:
-        logs[vm["name"]] = _run_remote_command(vm, cmd)
+        logs[vm["name"]] = _run_remote_command(vm, cmd).decode("ASCII")
     return logs

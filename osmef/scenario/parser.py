@@ -109,8 +109,7 @@ class ScenarioManager:
     def scenario_end(self):
         osmef.command_proto.end(self.vm_setup)
         logs = osmef.ssh.get_worker_logs(self.vm_setup)
-        for l in logs:
-            print("==> {} <==\n{}\n\n".format(l, logs[l].decode("utf-8")))
+        return logs
 
     def cleanup(self):
         if self.active is None:

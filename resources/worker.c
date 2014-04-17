@@ -12,11 +12,13 @@
 #include <signal.h>
 #include <arpa/inet.h>
 #include <semaphore.h>
+#include <sys/time.h>
 
 #define CMD_LISTEN_PORT 2333
 #define DATA_CHUNK_SIZE 65536
 #define CMD_DATA_LEN 1024
 #define NAME_LEN 16
+#define RESULT_PFX "*RES* "
 
 #define MSG_EXIT    0
 #define MSG_INIT    1
@@ -90,7 +92,38 @@ struct reducer_conn_thread {
 
 struct measurement {
 	char th_name[NAME_LEN];
+	long long time_start_ms;
+	unsigned int time_elapsed;
+	unsigned int thread_time;
+	unsigned long int bytes_moved;
 };
+
+struct results {
+	struct measurement** meas;
+	int count;
+	char th_name[NAME_LEN];
+};
+
+long long get_wall_time_ms()
+{
+	struct timeval t;
+	gettimeofday(&t, NULL);
+	return (((long long)t.tv_sec*1000000) + t.tv_usec)/1000;
+}
+
+long long get_timestamp_ms()
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (((long long)ts.tv_sec*1000000000) + ts.tv_nsec)/1000000;
+}
+
+unsigned int get_thread_time_ms()
+{
+	struct timespec ts;
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
+	return (((long long)ts.tv_sec*1000000000) + ts.tv_nsec)/1000000;
+}
 
 int listen_socket(const unsigned short int port)
 {
@@ -151,8 +184,17 @@ void* mapper_connection(void* vargs)
 	struct mapper_connection_args* args = vargs;
 	char* ptr = args->data;
 	ssize_t bytes_sent = 0;
+	struct measurement* result;
+	long long time_s, time_e;
+
+	result = malloc(sizeof(struct measurement));
+	strncpy(result->th_name, args->name, NAME_LEN);
 
 	fprintf(logfp, "(%s) thread started, have to send %ld bytes\n", args->name, args->size);
+
+	result->time_start_ms = get_wall_time_ms();
+	time_s = get_timestamp_ms();
+
 	while (bytes_sent < args->size) {
 		int ret, chunk_len;
 
@@ -166,14 +208,21 @@ void* mapper_connection(void* vargs)
 			bytes_sent += ret;
 		}
 	}
+
 	args->data[0] = 0xFF;
 	send(args->s, args->data, 1, 0);
+
+	time_e = get_timestamp_ms();
+
+	result->time_elapsed = time_e - time_s;
+	result->bytes_moved = bytes_sent + 1;
+	result->thread_time = get_thread_time_ms();
 
 	free(args->data);
 	close(args->s);
 	fprintf(logfp, "(%s) all data sent, thread exiting\n", args->name);
 	sem_post(args->finish_sem);
-	return NULL;
+	return result;
 }
 
 void* mapper(void* vargs)
@@ -183,7 +232,7 @@ void* mapper(void* vargs)
 	struct mapper_connection_args** reducers;
 	struct mapper_conn_thread* conn_threads;
 	sem_t th_completion_sem;
-	struct measurement* result;
+	struct results *results;
 
 	fprintf(logfp, "(%s) Mapper thread started\n", args->name);
 
@@ -212,12 +261,14 @@ void* mapper(void* vargs)
 	fprintf(logfp, "(%s) Binding to port %d\n", args->name, args->port);
 	s = listen_socket(args->port);
 
-	result = malloc(sizeof(struct measurement));
-	strncpy(result->th_name, args->name, NAME_LEN);
-
 	sem_init(&th_completion_sem, 0, 0);
 
 	to_start = remaining = args->num_reducers;
+
+	results = malloc(sizeof(struct results));
+	results->meas = calloc(args->num_reducers, sizeof(struct measurement));
+	results->count = args->num_reducers;
+	strncpy(results->th_name, args->name, NAME_LEN);
 
 	// We are ready to start
 	pthread_barrier_wait(&args->ready);
@@ -271,6 +322,7 @@ void* mapper(void* vargs)
 				}
 			}
 		} else {
+			void* result;
 			fprintf(logfp, "(%s) Waiting for a thread to finish\n", args->name);
 			sem_wait(&th_completion_sem);
 			i = 0;
@@ -279,11 +331,16 @@ void* mapper(void* vargs)
 				if (conn_threads[i].free) {
 					continue;
 				}
-				ret = pthread_tryjoin_np(conn_threads[i].th, NULL);
+				ret = pthread_tryjoin_np(conn_threads[i].th, &result);
 			} while (ret != 0);
 			current_conn_count--;
 			remaining--;
 			conn_threads[i].free = 1;
+			i = 0;
+			while (results->meas[i] != NULL) {
+				i++;
+			}
+			results->meas[i] = result;
 			fprintf(logfp, "(%s) thread %d joined, %d connections remaining\n", args->name, i, remaining);
 		}
 	}
@@ -301,7 +358,7 @@ void* mapper(void* vargs)
 	}
 	free(args->reducer_names);
 	free(args);
-	return result;
+	return results;
 }
 
 void new_mapper(pthread_t *node, int id, char* data)
@@ -346,10 +403,18 @@ void* reducer_connection(void* vargs)
 	char my_name[NAME_LEN];
 	ssize_t data_recv_size = 0;
 	char* end_character = NULL;
+	struct measurement* result;
+	long long time_s, time_e;
+
+	result = malloc(sizeof(struct measurement));
 
 	snprintf(my_name, NAME_LEN, "%s:%d", args->name, args->id);
+	strncpy(result->th_name, my_name, NAME_LEN);
 
 	s = socket(AF_INET, SOCK_STREAM, 0);
+
+	result->time_start_ms = get_wall_time_ms();
+	time_s = get_timestamp_ms();
 
 	ret = connect(s, &args->addr, sizeof(struct sockaddr_in));
 	if (ret) {
@@ -364,10 +429,16 @@ void* reducer_connection(void* vargs)
 		data_recv_size += ret;
 		end_character = memchr(buf, 0xFF, ret);
 	} while (end_character == NULL);
+
+	time_e = get_timestamp_ms();
+	result->time_elapsed = time_e - time_s;
+	result->bytes_moved = data_recv_size;
+	result->thread_time = get_thread_time_ms();
+
 	close(s);
 	fprintf(logfp, "(%s) Connection finished, received %ld bytes\n", my_name, data_recv_size);
 	sem_post(args->finish_sem);
-	return NULL;
+	return result;
 }
 
 void* reducer(void* vargs)
@@ -375,7 +446,7 @@ void* reducer(void* vargs)
 	struct reducer_args* args = vargs;
 	struct reducer_conn_thread* conns;
 	struct reducer_connection_args* mappers;
-	struct measurement* result;
+	struct results* results;
 	int i, ret, to_start, remaining, conn_count = 0, next_mapper = 0;
 	sem_t th_completion_sem;
 
@@ -398,8 +469,10 @@ void* reducer(void* vargs)
 		conns[i].free = 1;
 	}
 
-	result = malloc(sizeof(struct measurement));
-	strncpy(result->th_name, args->name, NAME_LEN);
+	results = malloc(sizeof(struct results));
+	results->meas = calloc(args->num_mappers, sizeof(struct measurement*));
+	strncpy(results->th_name, args->name, NAME_LEN);
+	results->count = args->num_mappers;
 
 	to_start = remaining = args->num_mappers;
 
@@ -426,6 +499,7 @@ void* reducer(void* vargs)
 			next_mapper++;
 			to_start--;
 		} else {
+			void* result;
 			fprintf(logfp, "(%s) Maximum number of connections reached (%d), waiting for a thread to finish\n", args->name, conn_count);
 			sem_wait(&th_completion_sem);
 			i = 0;
@@ -434,12 +508,17 @@ void* reducer(void* vargs)
 				if (conns[i].free) {
 					continue;
 				}
-				ret = pthread_tryjoin_np(conns[i].th, NULL);
+				ret = pthread_tryjoin_np(conns[i].th, &result);
 			} while (ret != 0);
 			remaining--;
 			conn_count--;
 			conns[i].free = 1;
 			fprintf(logfp, "(%s) thread %d joined, %d connections remaining\n", args->name, i, remaining);
+			i = 0;
+			while (results->meas[i]) {
+				i++;
+			}
+			results->meas[i] = result;
 		}
 	}
 
@@ -450,7 +529,7 @@ void* reducer(void* vargs)
 	fprintf(logfp, "(%s) all done, exiting\n", args->name);
 	free(args->addresses);
 	free(args);
-	return result;
+	return results;
 }
 
 void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
@@ -490,26 +569,38 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 	pthread_barrier_destroy(&reducer_args->ready); // Will not be used again
 }
 
-void send_results(int num_nodes, struct measurement** results)
+void send_results(struct results* results)
 {
+	int i;
+
+	fprintf(logfp, RESULT_PFX "start node %s\n", results->th_name);
+	for (i = 0; i < results->count; i++) {
+		fprintf(logfp, RESULT_PFX "%s,%lld,%d,%d,%ld\n",
+				results->meas[i]->th_name,
+				results->meas[i]->time_start_ms,
+				results->meas[i]->time_elapsed,
+				results->meas[i]->thread_time,
+				results->meas[i]->bytes_moved);
+	}
+	fprintf(logfp, RESULT_PFX "end node %s\n", results->th_name);
 }
 
 void wait_for_results(int num_nodes, pthread_t* nodes)
 {
-	int i;
+	int i, j;
 	void* retval;
-	struct measurement* results[num_nodes];
+	struct results* results;
 
 	for (i = 0; i < num_nodes; i++) {
 		pthread_join(nodes[i], &retval);
-		results[i] = retval;
-		fprintf(logfp, "Node %s joined\n", results[i]->th_name);
-	}
-
-	send_results(num_nodes, results);
-
-	for (i = 0; i < num_nodes; i++) {
-		free(results[i]);
+		results = retval;
+		send_results(results);
+		fprintf(logfp, "Node %s joined\n", results->th_name);
+		for (j = 0; j < results->count; j++) {
+			free(results->meas[i]);
+		}
+		free(results->meas);
+		free(results);
 	}
 }
 
