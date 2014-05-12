@@ -24,7 +24,10 @@ def _run_remote_command(vm, command):
 
 def _check_worker_version(vm):
     command = "cat /tmp/osmef_worker_version"
-    remote_ver = _run_remote_command(vm, command).split()[0]
+    try:
+        remote_ver = _run_remote_command(vm, command).split()[0]
+    except AttributeError:
+        return False
     local_ver = check_output(["md5sum", WORKER_PATH]).split()[0]
     return remote_ver == local_ver
 
