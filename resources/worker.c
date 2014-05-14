@@ -175,6 +175,7 @@ void send_reply(int s, struct reply* rep)
 void send_done(int s)
 {
 	struct reply rep;
+	memset(&rep, 0, sizeof(struct reply));
 	snprintf(rep.data, CMD_DATA_LEN, "DONE");
 	send_reply(s, &rep);
 }
@@ -266,7 +267,7 @@ void* mapper(void* vargs)
 	to_start = remaining = args->num_reducers;
 
 	results = malloc(sizeof(struct results));
-	results->meas = calloc(args->num_reducers, sizeof(struct measurement));
+	results->meas = calloc(args->num_reducers, sizeof(struct measurement*));
 	results->count = args->num_reducers;
 	strncpy(results->th_name, args->name, NAME_LEN);
 
@@ -597,7 +598,7 @@ void wait_for_results(int num_nodes, pthread_t* nodes)
 		send_results(results);
 		fprintf(logfp, "Node %s joined\n", results->th_name);
 		for (j = 0; j < results->count; j++) {
-			free(results->meas[i]);
+			free(results->meas[j]);
 		}
 		free(results->meas);
 		free(results);
@@ -610,7 +611,7 @@ void command_thread()
 	struct sockaddr_in peer_addr;
 	int exit = 0, peer_s, node_count = 0;
 	int num_nodes = 0, num_mappers = 0, num_reducers = 0;
-	socklen_t peer_addr_len;
+	socklen_t peer_addr_len = sizeof(struct sockaddr_in);
 	pthread_t* nodes = NULL;
 	pthread_barrier_t start_barr;
 

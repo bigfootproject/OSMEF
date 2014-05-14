@@ -13,6 +13,6 @@ if [ -z $CC ]; then
 	exit
 fi
 
-gcc -Wall $CFLAGS $DIR/worker.c -pthread -o $DIR/worker
+gcc -Wall $CFLAGS $DIR/worker.c -pthread -lrt -o $DIR/worker
 md5sum $DIR/worker.c > $DIR/osmef_worker_version
 
