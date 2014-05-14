@@ -13,6 +13,7 @@
 #include <arpa/inet.h>
 #include <semaphore.h>
 #include <sys/time.h>
+#include <assert.h>
 
 #define CMD_LISTEN_PORT 2333
 #define DATA_CHUNK_SIZE 65536
@@ -328,12 +329,13 @@ void* mapper(void* vargs)
 			sem_wait(&th_completion_sem);
 			i = 0;
 			do {
-				i = (i + 1) % args->num_concurrent_conn;
-				if (conn_threads[i].free) {
-					continue;
+				result = NULL;
+				while (conn_threads[i].free) { // There is at least one that is not free
+					i = (i + 1) % args->num_concurrent_conn;
 				}
 				ret = pthread_tryjoin_np(conn_threads[i].th, &result);
 			} while (ret != 0);
+			assert(result != NULL);
 			current_conn_count--;
 			remaining--;
 			conn_threads[i].free = 1;
@@ -505,18 +507,19 @@ void* reducer(void* vargs)
 			sem_wait(&th_completion_sem);
 			i = 0;
 			do {
-				i = (i + 1) % args->num_concurrent_conn;
-				if (conns[i].free) {
-					continue;
+				result = NULL;
+				while (conns[i].free) { // There is at least one that is not free
+					i = (i + 1) % args->num_concurrent_conn;
 				}
 				ret = pthread_tryjoin_np(conns[i].th, &result);
 			} while (ret != 0);
+			assert(result != NULL);
 			remaining--;
 			conn_count--;
 			conns[i].free = 1;
 			fprintf(logfp, "(%s) thread %d joined, %d connections remaining\n", args->name, i, remaining);
 			i = 0;
-			while (results->meas[i]) {
+			while (results->meas[i] != NULL) {
 				i++;
 			}
 			results->meas[i] = result;
