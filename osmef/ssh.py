@@ -6,9 +6,11 @@ from subprocess import check_output, check_call, CalledProcessError
 
 WORKER_FILE = "worker.c"
 BUILD_SCRIPT = "build.sh"
+SETUP_SCRIPT = "setup.sh"
 WORKER_EXECUTABLE = "worker"
 WORKER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", WORKER_FILE))
 BUILDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", BUILD_SCRIPT))
+SETUP_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", SETUP_SCRIPT))
 
 
 def _run_remote_command(vm, command):
@@ -39,6 +41,9 @@ def _upload_worker(vm):
     command = "scp -q -i %s %s %s@%s:/tmp" % (vm["keyfile"], BUILDER_PATH, vm["username"], vm["ip"])
     log.debug("Running command: %s" % command)
     check_call(command.split())
+    command = "scp -q -i %s %s %s@%s:/tmp" % (vm["keyfile"], SETUP_PATH, vm["username"], vm["ip"])
+    log.debug("Running command: %s" % command)
+    check_call(command.split())
     log.info("Running build script on '{}'".format(vm["name"]))
     output = _run_remote_command(vm, "bash /tmp/%s" % BUILD_SCRIPT)
     if output == "No gcc available":
@@ -48,6 +53,7 @@ def _upload_worker(vm):
 def start_workers(vm_setup):
     for vm in vm_setup:
         _run_remote_command(vm, "killall -q -KILL %s" % WORKER_EXECUTABLE)
+        _run_remote_command(vm, "sudo bash /tmp/%s" % SETUP_SCRIPT)
         _run_remote_command(vm, "/tmp/%s" % WORKER_EXECUTABLE)
 
 

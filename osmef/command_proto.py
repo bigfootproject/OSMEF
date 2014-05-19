@@ -31,7 +31,10 @@ def _send_msg(vm, cmd, data):
 
 def _recv_reply(vm):
     data = vm["conn"].recv(1024)
-    data = struct.unpack("1024s", data)[0]
+    try:
+        data = struct.unpack("1024s", data)[0]
+    except struct.error:
+        return None
     data = bytearray(data)
     term = data.index(bytes('\x00', "ASCII"))
     data = data[0:term].decode("ASCII")

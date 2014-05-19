@@ -14,6 +14,7 @@
 #include <semaphore.h>
 #include <sys/time.h>
 #include <assert.h>
+#include <sys/resource.h>
 
 #define CMD_LISTEN_PORT 2333
 #define DATA_CHUNK_SIZE 65536
@@ -126,6 +127,14 @@ unsigned int get_thread_time_ms()
 	return (((long long)ts.tv_sec*1000000000) + ts.tv_nsec)/1000000;
 }
 
+void check_alloc(void* mem, char* name)
+{
+	if (mem == NULL) {
+		fprintf(logfp, "(%s) Cannot allocate enough memory, crashing...\n", name);
+		abort();
+	}
+}
+
 int listen_socket(const unsigned short int port)
 {
 	int s, ret;
@@ -152,6 +161,7 @@ struct msg* receive_command(int s)
 {
 	ssize_t ret;
 	struct msg* tmp = calloc(1, sizeof(struct msg));
+	check_alloc(tmp, "receive_command_1");
 	char buf[1024], *aux;
 	ret = recv(s, buf, 1024, MSG_WAITALL);
 	if (ret != 1024) {
@@ -190,6 +200,7 @@ void* mapper_connection(void* vargs)
 	long long time_s, time_e;
 
 	result = malloc(sizeof(struct measurement));
+	check_alloc(result, "mapper_connection_1");
 	strncpy(result->th_name, args->name, NAME_LEN);
 
 	fprintf(logfp, "(%s) thread started, have to send %ld bytes\n", args->name, args->size);
@@ -242,12 +253,15 @@ void* mapper(void* vargs)
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
 	reducers = malloc(args->num_reducers * sizeof(struct mapper_connection_args*));
+	check_alloc(reducers, "mapper_1");
 	for (i = 0; i < args->num_reducers; i++) {
 		int j;
 		fprintf(logfp, "(%s) Allocating data for reducer %s\n", args->name, args->reducer_names[i]);
 		reducers[i] = malloc(sizeof(struct mapper_connection_args));
+		check_alloc(reducers[i], "mapper_2");
 		reducers[i]->size = args->reducer_sizes[i];
 		reducers[i]->data = malloc(sizeof(ssize_t) * args->reducer_sizes[i]);
+		check_alloc(reducers[i]->data, "mapper_3");
 		reducers[i]->reducer_name = args->reducer_names[i];
 		reducers[i]->finish_sem = &th_completion_sem;
 		for (j = 0; j < args->reducer_sizes[i]; j++) {
@@ -256,6 +270,7 @@ void* mapper(void* vargs)
 	}
 
 	conn_threads = malloc(args->num_concurrent_conn * sizeof(struct mapper_conn_thread));
+	check_alloc(conn_threads, "mapper_4");
 	for (i = 0; i < args->num_concurrent_conn; i++) {
 		conn_threads[i].free = 1;
 	}
@@ -268,7 +283,9 @@ void* mapper(void* vargs)
 	to_start = remaining = args->num_reducers;
 
 	results = malloc(sizeof(struct results));
+	check_alloc(results, "mapper_5");
 	results->meas = calloc(args->num_reducers, sizeof(struct measurement*));
+	check_alloc(results->meas, "mapper_6");
 	results->count = args->num_reducers;
 	strncpy(results->th_name, args->name, NAME_LEN);
 
@@ -371,6 +388,7 @@ void new_mapper(pthread_t *node, int id, char* data)
 	struct mapper_args* args;
 
 	args = malloc(sizeof(struct mapper_args));
+	check_alloc(args, "new_mapper_1");
 
 	pthread_barrier_init(&args->ready, NULL, 2);
 	strncpy(args->name, aux, NAME_LEN);
@@ -382,9 +400,12 @@ void new_mapper(pthread_t *node, int id, char* data)
 	aux = strtok(NULL, ",");
 	args->num_reducers = atol(aux);
 	args->reducer_sizes = malloc(args->num_reducers * sizeof(ssize_t));
+	check_alloc(args->reducer_sizes, "new_mapper_2");
 	args->reducer_names = malloc(args->num_reducers * sizeof(ssize_t));
+	check_alloc(args->reducer_names, "new_mapper_3");
 	for (i = 0; i < args->num_reducers; i++) {
 		args->reducer_names[i] = malloc(NAME_LEN * sizeof(char));
+		check_alloc(args->reducer_names[i], "new_mapper_4");
 		aux = strtok(NULL, ",");
 		strncpy(args->reducer_names[i], aux, NAME_LEN);
 		aux = strtok(NULL, ",");
@@ -410,6 +431,7 @@ void* reducer_connection(void* vargs)
 	long long time_s, time_e;
 
 	result = malloc(sizeof(struct measurement));
+	check_alloc(result, "reducer_connection_1");
 
 	snprintf(my_name, NAME_LEN, "%s:%d", args->name, args->id);
 	strncpy(result->th_name, my_name, NAME_LEN);
@@ -459,6 +481,7 @@ void* reducer(void* vargs)
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
 	mappers = malloc(args->num_mappers * sizeof(struct reducer_connection_args));
+	check_alloc(mappers, "reducer_1");
 	for (i = 0; i < args->num_mappers; i++) {
 		mappers[i].addr.sin_family = AF_INET;
 		mappers[i].addr.sin_port = htons(args->addresses[i].port);
@@ -468,12 +491,15 @@ void* reducer(void* vargs)
 	}
 
 	conns = malloc(args->num_concurrent_conn * sizeof(struct reducer_conn_thread));
+	check_alloc(conns, "reducer_2");
 	for (i = 0; i < args->num_concurrent_conn; i++) {
 		conns[i].free = 1;
 	}
 
 	results = malloc(sizeof(struct results));
+	check_alloc(results, "reducer_3");
 	results->meas = calloc(args->num_mappers, sizeof(struct measurement*));
+	check_alloc(results->meas, "reducer_4");
 	strncpy(results->th_name, args->name, NAME_LEN);
 	results->count = args->num_mappers;
 
@@ -544,6 +570,7 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 	struct reducer_args* reducer_args;
 
 	reducer_args = malloc(sizeof(struct reducer_args));
+	check_alloc(reducer_args, "reducer_connection_1");
 
 	pthread_barrier_init(&reducer_args->ready, NULL, 2);
 	strncpy(reducer_args->name, aux, NAME_LEN);
@@ -553,6 +580,7 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 	aux = strtok(NULL, ",");
 	reducer_args->num_mappers = atol(aux);
 	reducer_args->addresses = calloc(reducer_args->num_mappers, sizeof(struct map_address));
+	check_alloc(reducer_args->addresses, "reducer_connection_2");
 	for (i = 0; i < reducer_args->num_mappers; i++) {
 		aux = strtok(NULL, ",");
 		strncpy(reducer_args->addresses[i].reducer_name, aux, NAME_LEN);
@@ -640,6 +668,7 @@ void command_thread()
 				num_reducers = atol(tmp);
 				num_nodes = num_mappers + num_reducers;
 				nodes = malloc(num_nodes * sizeof(pthread_t));
+				check_alloc(nodes, "command_thread_1");
 				pthread_barrier_init(&start_barr, NULL, num_reducers + 1);
 				send_done(peer_s);
 				break;
@@ -686,6 +715,8 @@ void end_sig(int sig)
 
 int main(int argc, char *argv[])
 {
+	struct rlimit core_limits;
+
 	if (argc == 1) {
 		logfp = fopen("/tmp/osmef_worker.log", "w");
 	} else {
@@ -696,6 +727,10 @@ int main(int argc, char *argv[])
 	signal(SIGTERM, end_sig);
 	signal(SIGQUIT, end_sig);
 	fprintf(logfp, "OSMeF worker starting\n");
+
+	fprintf(logfp, "Enabling core dumping\n");
+	core_limits.rlim_cur = core_limits.rlim_max = RLIM_INFINITY;
+	setrlimit(RLIMIT_CORE, &core_limits);
 
 	if (argc == 1)
 		daemon(1, 0);
