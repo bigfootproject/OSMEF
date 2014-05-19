@@ -53,7 +53,7 @@ struct mapper_args {
 struct mapper_connection_args {
 	int s;
 	ssize_t size;
-	char* data;
+	char data[DATA_CHUNK_SIZE];
 	int id;
 	char* reducer_name;
 	char name[NAME_LEN];
@@ -194,7 +194,6 @@ void send_done(int s)
 void* mapper_connection(void* vargs)
 {
 	struct mapper_connection_args* args = vargs;
-	char* ptr = args->data;
 	ssize_t bytes_sent = 0;
 	struct measurement* result;
 	long long time_s, time_e;
@@ -216,7 +215,7 @@ void* mapper_connection(void* vargs)
 		} else {
 			chunk_len = DATA_CHUNK_SIZE;
 		}
-		ret = send(args->s, ptr, chunk_len, 0);
+		ret = send(args->s, args->data, chunk_len, 0);
 		if (ret > 0) {
 			bytes_sent += ret;
 		}
@@ -231,7 +230,6 @@ void* mapper_connection(void* vargs)
 	result->bytes_moved = bytes_sent + 1;
 	result->thread_time = get_thread_time_ms();
 
-	free(args->data);
 	close(args->s);
 	fprintf(logfp, "(%s) all data sent, thread exiting\n", args->name);
 	sem_post(args->finish_sem);
@@ -260,11 +258,9 @@ void* mapper(void* vargs)
 		reducers[i] = malloc(sizeof(struct mapper_connection_args));
 		check_alloc(reducers[i], "mapper_2");
 		reducers[i]->size = args->reducer_sizes[i];
-		reducers[i]->data = malloc(sizeof(ssize_t) * args->reducer_sizes[i]);
-		check_alloc(reducers[i]->data, "mapper_3");
 		reducers[i]->reducer_name = args->reducer_names[i];
 		reducers[i]->finish_sem = &th_completion_sem;
-		for (j = 0; j < args->reducer_sizes[i]; j++) {
+		for (j = 0; j < DATA_CHUNK_SIZE; j++) {
 			reducers[i]->data[j] = j & 0x7F;
 		}
 	}

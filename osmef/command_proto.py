@@ -20,6 +20,9 @@ def _connect_worker(vm):
 
 
 def _send_msg(vm, cmd, data):
+    if not "conn" in vm:
+        log.error("Cannot send command: no connection")
+        return
     log.debug("Sending command {} to '{}'".format(cmd, vm["name"]))
     msg = "{}|{}".format(commands[cmd], data)
     print(msg)
@@ -55,21 +58,29 @@ def init(vm_setup):
         _connect_worker(vm)
         _send_msg(vm, "CMD_INIT", "")
         _send_msg(vm, "CMD_NODES", "{},{}".format(vm["num_mappers"], vm["num_reducers"]))
-        _recv_done(vm)
+        ret = _recv_done(vm)
+        if not ret:
+            return False
         for m in vm["mappers"]:
             msg = m.to_str()
             _send_msg(vm, "CMD_MAPPER", msg)
-            _recv_done(vm)
+            ret = _recv_done(vm)
+            if not ret:
+                return False
         for r in vm["reducers"]:
             msg = r.to_str()
             _send_msg(vm, "CMD_REDUCER", msg)
+    return True
 
 
 def start_measurement(vm_setup):
     for vm in vm_setup:
         _send_msg(vm, "CMD_START", "")
     for vm in vm_setup:
-        _recv_done(vm)
+        ret = _recv_done(vm)
+        if not ret:
+            return False
+    return True
 
 
 def end(vm_setup):

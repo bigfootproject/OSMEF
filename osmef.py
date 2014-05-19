@@ -36,9 +36,9 @@ out_dir = os.path.join(os.path.abspath(args.output_dir), args.scenario + "-%d" %
 if not os.path.exists(out_dir):
     os.mkdir(out_dir)
 
-sm.select(args.scenario)
-
-sm.start()
+ret = sm.select(args.scenario)
+if ret:
+    sm.start()
 
 logs = sm.scenario_end()
 for k in logs:

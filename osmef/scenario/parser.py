@@ -69,7 +69,11 @@ class ScenarioManager:
 
         self.distribute_workload()
 
-        osmef.command_proto.init(self.vm_setup)
+        ret = osmef.command_proto.init(self.vm_setup)
+        if not ret:
+            log.error("Scenario initialization failed")
+            return False
+        return True
 
     def distribute_workload(self):
         for vm in self.vm_setup:
@@ -104,7 +108,11 @@ class ScenarioManager:
                 r.data_size = int(per_reducer_size)
 
     def start(self):
-        osmef.command_proto.start_measurement(self.vm_setup)
+        ret = osmef.command_proto.start_measurement(self.vm_setup)
+        if not ret:
+            log.error("Error starting the scenario")
+            return False
+        return True
 
     def scenario_end(self):
         osmef.command_proto.end(self.vm_setup)
