@@ -1,0 +1,26 @@
+[description]
+name = local4
+# Shuffle size in GB
+total_shuffle_size = 10
+num_vms = 4
+
+[vm1]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm2]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm3]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm4]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
