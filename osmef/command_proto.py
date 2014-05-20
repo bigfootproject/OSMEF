@@ -61,26 +61,29 @@ def init(vm_setup):
         ret = _recv_done(vm)
         if not ret:
             return False
+        ret = True
         for m in vm["mappers"]:
             msg = m.to_str()
             _send_msg(vm, "CMD_MAPPER", msg)
-            ret = _recv_done(vm)
-            if not ret:
-                return False
+            ret &= _recv_done(vm)
+        if not ret:
+            return False
         for r in vm["reducers"]:
             msg = r.to_str()
             _send_msg(vm, "CMD_REDUCER", msg)
+            ret &= _recv_done(vm)
+        if not ret:
+            return False
     return True
 
 
 def start_measurement(vm_setup):
     for vm in vm_setup:
         _send_msg(vm, "CMD_START", "")
+    ret = True
     for vm in vm_setup:
-        ret = _recv_done(vm)
-        if not ret:
-            return False
-    return True
+        ret &= _recv_done(vm)
+    return ret
 
 
 def end(vm_setup):

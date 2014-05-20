@@ -38,7 +38,9 @@ if not os.path.exists(out_dir):
 
 ret = sm.select(args.scenario)
 if ret:
-    sm.start()
+    ret = sm.start()
+    if not ret:
+        log.error("Error while execution scenario")
 
 logs = sm.scenario_end()
 for k in logs:

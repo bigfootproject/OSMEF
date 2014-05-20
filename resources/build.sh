@@ -4,9 +4,9 @@ if [ -z $1 ]; then
 	DIR=/tmp
 else
 	DIR=.
-	CFLAGS=-g
 fi
 
+CFLAGS=-g
 CC=`which gcc`
 if [ -z $CC ]; then
 	echo "No gcc available"
