@@ -71,7 +71,7 @@ def load_all(src_dir, scenario):
     data = {}
     file_list = os.listdir(src_dir)
     for f in file_list:
-        if not scenario in f:
+        if not scenario + "-" in f:
             continue
         if not os.path.isdir(os.path.join(src_dir, f)):
             continue
@@ -92,6 +92,18 @@ def calc(values, fun_pre=lambda x: x, fun_after=lambda x: x):
 #    out["sum"] = fun_after(numpy.sum(values))
     out["std"] = fun_after(numpy.std(values))
     out["count"] = len(values)
+    return out
+
+
+def calc_bw(sizes_bit, times_ns, fun_pre=lambda x: x):
+    bw = []
+    assert(len(sizes_bit) == len(times_ns))
+    for i in range(len(sizes_bit)):
+        bw.append((fun_pre(sizes_bit[i]) * 8) / (fun_pre(times_ns[i]) / 1000.0))
+    out = {}
+    out["avg"] = numpy.average(bw)
+    out["std"] = numpy.std(bw)
+    out["count"] = len(bw)
     return out
 
 
@@ -134,8 +146,10 @@ preprocess(data[scenario]["raw"])
 fun_toInt = lambda x: int(x.strip())
 
 throughput = 0
+throughput_std = 0
 first_sample = data[scenario]["raw"].keys()[0]
 for vm in data[scenario]["raw"][first_sample]:
+    print("Looking at VM %s for sample %s" % (vm, first_sample))
     for node in data[scenario]["raw"][first_sample][vm]:
         for conn in data[scenario]["raw"][first_sample][vm][node]:
             b = get_one_value_many_measurements(data[scenario]["raw"], "%s.%s.%s.bytes" % (vm, node, conn))
@@ -144,14 +158,17 @@ for vm in data[scenario]["raw"][first_sample]:
             data[scenario]["aggr"][vm][node][conn]["cpu_time"] = calc(c, fun_toInt)
             t = get_one_value_many_measurements(data[scenario]["raw"], "%s.%s.%s.time_elapsed" % (vm, node, conn))
             data[scenario]["aggr"][vm][node][conn]["time_elapsed"] = calc(t, fun_toInt)
-            bw = (data[scenario]["aggr"][vm][node][conn]["bytes"]["avg"] * 8) / (data[scenario]["aggr"][vm][node][conn]["time_elapsed"]["avg"] / 1000.0)
-            data[scenario]["aggr"][vm][node][conn]["bandwidth_bit_sec"] = bw
+#            bw = (data[scenario]["aggr"][vm][node][conn]["bytes"]["avg"] * 8) / (data[scenario]["aggr"][vm][node][conn]["time_elapsed"]["avg"] / 1000.0)
+#            data[scenario]["aggr"][vm][node][conn]["bandwidth_bit_sec"] = bw
+            data[scenario]["aggr"][vm][node][conn]["bandwidth_bit_sec"] = calc_bw(b, t, fun_toInt)
             if "r" in node:
-                throughput += bw
+                throughput += data[scenario]["aggr"][vm][node][conn]["bandwidth_bit_sec"]["avg"]
+                throughput_std += data[scenario]["aggr"][vm][node][conn]["bandwidth_bit_sec"]["std"] ** 2
 
-data[scenario]["aggr"]["total_throughput_bit_sec"] = throughput
+data[scenario]["aggr"]["total_throughput_bit_sec"]["thr"] = throughput
+data[scenario]["aggr"]["total_throughput_bit_sec"]["std"] = numpy.sqrt(throughput_std)
 
-pprint(data[scenario]["aggr"])
+print("Writing summary for scenario %s" % scenario)
 
 json.dump(data, open("%s_summary.json" % scenario, "w"), sort_keys=True, indent=4, separators=(',', ': '))
 

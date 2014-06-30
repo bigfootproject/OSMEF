@@ -1,0 +1,36 @@
+
+[description]
+name = local6_1tb
+# Shuffle size in GB
+total_shuffle_size = 1024
+num_vms = 6
+
+[vm1]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm2]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm3]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm4]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm5]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
+
+[vm6]
+zone = zone_perf:bigfoot1
+num_mappers = 1
+num_reducers = 1
