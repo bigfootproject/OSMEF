@@ -1,0 +1,285 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+(vm15:m0) New mapper on port 23330
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) -> reducer data size 3045738581
+(vm15:m0) Mapper thread started
+(vm15:m0) Allocating data for reducer vm1:r0
+(vm15:m0) Allocating data for reducer vm2:r0
+(vm15:m0) Allocating data for reducer vm3:r0
+(vm15:m0) Allocating data for reducer vm4:r0
+(vm15:m0) Allocating data for reducer vm5:r0
+(vm15:m0) Allocating data for reducer vm6:r0
+(vm15:m0) Allocating data for reducer vm7:r0
+(vm15:m0) Allocating data for reducer vm8:r0
+(vm15:m0) Allocating data for reducer vm9:r0
+(vm15:m0) Allocating data for reducer vm10:r0
+(vm15:m0) Allocating data for reducer vm11:r0
+(vm15:m0) Allocating data for reducer vm12:r0
+(vm15:m0) Allocating data for reducer vm13:r0
+(vm15:m0) Allocating data for reducer vm14:r0
+(vm15:m0) Allocating data for reducer vm15:r0
+(vm15:m0) Allocating data for reducer vm16:r0
+(vm15:m0) Allocating data for reducer vm17:r0
+(vm15:m0) Allocating data for reducer vm18:r0
+(vm15:m0) Allocating data for reducer vm19:r0
+(vm15:m0) Binding to port 23330
+(vm15:r0) New reducer
+(vm15:r0) Reducer thread started
+(vm15:r0) waiting for START message
+(vm15:r0) got START message
+(vm15:r0) Starting new connection thread
+(vm15:r0) Starting new connection thread
+(vm15:r0) Starting new connection thread
+(vm15:r0) Starting new connection thread
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:2) Connection established
+(vm15:r0:4) Connection established
+(vm15:r0:1) Connection established
+(vm15:r0:3) Connection established
+(vm15:r0:0) Connection established
+(vm15:r0:1) Connection finished, received 3045738582 bytes
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 18 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:3) Connection finished, received 3045738582 bytes
+(vm15:r0:2) Connection finished, received 3045738582 bytes
+(vm15:r0:4) Connection finished, received 3045738582 bytes
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 17 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 16 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm14:r0
+(vm15:m0:13) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm1:r0
+(vm15:m0:0) thread started, have to send 3045738581 bytes
+(vm15:m0:13) all data sent, thread exiting
+(vm15:m0:0) all data sent, thread exiting
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 15 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm6:r0
+(vm15:m0:5) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm7:r0
+(vm15:m0:6) thread started, have to send 3045738581 bytes
+(vm15:m0:5) all data sent, thread exiting
+(vm15:m0:6) all data sent, thread exiting
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 14 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm13:r0
+(vm15:m0:12) thread started, have to send 3045738581 bytes
+(vm15:m0:12) all data sent, thread exiting
+(vm15:m0) Got connection from reducer vm9:r0
+(vm15:m0:8) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm8:r0
+(vm15:m0:7) thread started, have to send 3045738581 bytes
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 13 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0:8) all data sent, thread exiting
+(vm15:m0:7) all data sent, thread exiting
+(vm15:m0) Got connection from reducer vm12:r0
+(vm15:m0:11) thread started, have to send 3045738581 bytes
+(vm15:m0:11) all data sent, thread exiting
+(vm15:m0) Got connection from reducer vm16:r0
+(vm15:m0:15) thread started, have to send 3045738581 bytes
+(vm15:m0:15) all data sent, thread exiting
+(vm15:m0) Got connection from reducer vm10:r0
+(vm15:m0:9) thread started, have to send 3045738581 bytes
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 12 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0:9) all data sent, thread exiting
+(vm15:m0) Got connection from reducer vm11:r0
+(vm15:m0:10) thread started, have to send 3045738581 bytes
+(vm15:m0:10) all data sent, thread exiting
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 11 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 10 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 9 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm15:r0
+(vm15:m0:14) thread started, have to send 3045738581 bytes
+(vm15:m0:14) all data sent, thread exiting
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 8 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 7 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 6 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm19:r0
+(vm15:m0:18) thread started, have to send 3045738581 bytes
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 5 connections remaining
+(vm15:r0) Starting new connection thread
+(vm15:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm15:r0:0) Connection established
+(vm15:m0) Got connection from reducer vm17:r0
+(vm15:m0:16) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm4:r0
+(vm15:m0:3) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm5:r0
+(vm15:m0:4) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm2:r0
+(vm15:m0:1) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm18:r0
+(vm15:m0:17) thread started, have to send 3045738581 bytes
+(vm15:m0) Got connection from reducer vm3:r0
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 0 joined, 18 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0:2) thread started, have to send 3045738581 bytes
+(vm15:m0:18) all data sent, thread exiting
+(vm15:r0:0) Connection finished, received 3045738582 bytes
+(vm15:r0) thread 0 joined, 4 connections remaining
+(vm15:r0) Maximum number of connections reached (4), waiting for a thread to finish
+(vm15:r0) thread 1 joined, 3 connections remaining
+(vm15:r0) Maximum number of connections reached (3), waiting for a thread to finish
+(vm15:r0) thread 2 joined, 2 connections remaining
+(vm15:r0) Maximum number of connections reached (2), waiting for a thread to finish
+(vm15:r0) thread 3 joined, 1 connections remaining
+(vm15:r0) Maximum number of connections reached (1), waiting for a thread to finish
+(vm15:r0) thread 4 joined, 0 connections remaining
+(vm15:r0) all done, exiting
+(vm15:m0:16) all data sent, thread exiting
+(vm15:m0:3) all data sent, thread exiting
+(vm15:m0:4) all data sent, thread exiting
+(vm15:m0:1) all data sent, thread exiting
+(vm15:m0) thread 1 joined, 17 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0:2) all data sent, thread exiting
+(vm15:m0) thread 2 joined, 16 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 3 joined, 15 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 4 joined, 14 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 5 joined, 13 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 6 joined, 12 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 7 joined, 11 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 8 joined, 10 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 9 joined, 9 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 10 joined, 8 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 11 joined, 7 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 12 joined, 6 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 13 joined, 5 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 14 joined, 4 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 15 joined, 3 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 16 joined, 2 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0:17) all data sent, thread exiting
+(vm15:m0) thread 17 joined, 1 connections remaining
+(vm15:m0) Waiting for a thread to finish
+(vm15:m0) thread 18 joined, 0 connections remaining
+(vm15:m0) all done, exiting
+*RES* start node vm15:m0
+*RES* vm15:m0:0,1403760627168,5858,1802,3045738582
+*RES* vm15:m0:1,1403760807910,19335,2284,3045738582
+*RES* vm15:m0:2,1403760808241,19043,2251,3045738582
+*RES* vm15:m0:3,1403760807694,19352,2273,3045738582
+*RES* vm15:m0:4,1403760807834,19271,2261,3045738582
+*RES* vm15:m0:5,1403760681803,5753,2487,3045738582
+*RES* vm15:m0:6,1403760687146,5369,2086,3045738582
+*RES* vm15:m0:7,1403760725098,6699,2092,3045738582
+*RES* vm15:m0:8,1403760724306,6919,2195,3045738582
+*RES* vm15:m0:9,1403760753902,5981,2456,3045738582
+*RES* vm15:m0:10,1403760765730,4933,1906,3045738582
+*RES* vm15:m0:11,1403760733474,7124,2199,3045738582
+*RES* vm15:m0:12,1403760712858,7783,1969,3045738582
+*RES* vm15:m0:13,1403760625018,6373,1952,3045738582
+*RES* vm15:m0:14,1403760792058,2446,404,3045738582
+*RES* vm15:m0:15,1403760747142,5950,2377,3045738582
+*RES* vm15:m0:16,1403760806926,18638,2220,3045738582
+*RES* vm15:m0:17,1403760808063,19398,2350,3045738582
+*RES* vm15:m0:18,1403760804796,14196,2060,3045738582
+*RES* end node vm15:m0
+Node vm15:m0 joined
+*RES* start node vm15:r0
+*RES* vm15:r0:0,1403760482466,52323,2476,3045738582
+*RES* vm15:r0:0,1403760534794,44232,2363,3045738582
+*RES* vm15:r0:0,1403760579030,44366,2227,3045738582
+*RES* vm15:r0:0,1403760623402,40278,2313,3045738582
+*RES* vm15:r0:0,1403760663686,32595,2344,3045738582
+*RES* vm15:r0:0,1403760696290,28824,2221,3045738582
+*RES* vm15:r0:0,1403760725122,29965,2285,3045738582
+*RES* vm15:r0:0,1403760755094,21228,2009,3045738582
+*RES* vm15:r0:0,1403760776326,11870,1845,3045738582
+*RES* vm15:r0:0,1403760788206,3839,1895,3045738582
+*RES* vm15:r0:0,1403760792054,2452,1016,3045738582
+*RES* vm15:r0:0,1403760794510,3591,1752,3045738582
+*RES* vm15:r0:0,1403760798110,4391,1760,3045738582
+*RES* vm15:r0:0,1403760802510,4241,1646,3045738582
+*RES* vm15:r0:0,1403760806758,14301,1626,3045738582
+*RES* vm15:r0:1,1403760482466,43867,2415,3045738582
+*RES* vm15:r0:2,1403760482466,55904,2510,3045738582
+*RES* vm15:r0:3,1403760482466,54009,2502,3045738582
+*RES* vm15:r0:4,1403760482466,59209,2552,3045738582
+*RES* end node vm15:r0
+Node vm15:r0 joined
+Worker terminating correctly

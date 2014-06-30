@@ -1,0 +1,61 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+(vm1:m0) New mapper on port 23330
+(vm1:m0) -> reducer data size 122167958641
+(vm1:m0) -> reducer data size 122167958641
+(vm1:m0) -> reducer data size 122167958641
+(vm1:m0) Mapper thread started
+(vm1:m0) Allocating data for reducer vm1:r0
+(vm1:m0) Allocating data for reducer vm2:r0
+(vm1:m0) Allocating data for reducer vm3:r0
+(vm1:m0) Binding to port 23330
+(vm1:r0) New reducer
+(vm1:r0) Reducer thread started
+(vm1:r0) waiting for START message
+(vm1:r0) got START message
+(vm1:r0) Starting new connection thread
+(vm1:r0) Starting new connection thread
+(vm1:r0) Starting new connection thread
+(vm1:r0) Maximum number of connections reached (3), waiting for a thread to finish
+(vm1:r0:0) Connection established
+(vm1:m0) Got connection from reducer vm1:r0
+(vm1:m0:0) thread started, have to send 122167958641 bytes
+(vm1:r0:2) Connection established
+(vm1:r0:1) Connection established
+(vm1:m0) Got connection from reducer vm2:r0
+(vm1:m0) Got connection from reducer vm3:r0
+(vm1:m0) Waiting for a thread to finish
+(vm1:m0:2) thread started, have to send 122167958641 bytes
+(vm1:m0:1) thread started, have to send 122167958641 bytes
+(vm1:m0:0) all data sent, thread exiting
+(vm1:m0) thread 0 joined, 2 connections remaining
+(vm1:m0) Waiting for a thread to finish
+(vm1:r0:0) Connection finished, received 122167958642 bytes
+(vm1:r0) thread 0 joined, 2 connections remaining
+(vm1:r0) Maximum number of connections reached (2), waiting for a thread to finish
+(vm1:m0:1) all data sent, thread exiting
+(vm1:m0) thread 1 joined, 1 connections remaining
+(vm1:m0) Waiting for a thread to finish
+(vm1:m0:2) all data sent, thread exiting
+(vm1:m0) thread 2 joined, 0 connections remaining
+(vm1:m0) all done, exiting
+*RES* start node vm1:m0
+*RES* vm1:m0:0,1403688443790,233104,18974,122167958642
+*RES* vm1:m0:1,1403688443798,335859,69609,122167958642
+*RES* vm1:m0:2,1403688443797,354947,68495,122167958642
+*RES* end node vm1:m0
+Node vm1:m0 joined
+(vm1:r0:1) Connection finished, received 122167958642 bytes
+(vm1:r0) thread 1 joined, 1 connections remaining
+(vm1:r0) Maximum number of connections reached (1), waiting for a thread to finish
+(vm1:r0:2) Connection finished, received 122167958642 bytes
+(vm1:r0) thread 2 joined, 0 connections remaining
+(vm1:r0) all done, exiting
+*RES* start node vm1:r0
+*RES* vm1:r0:0,1403688443790,233110,50091,122167958642
+*RES* vm1:r0:1,1403688443790,367440,62494,122167958642
+*RES* vm1:r0:2,1403688443790,407479,65230,122167958642
+*RES* end node vm1:r0
+Node vm1:r0 joined
+Worker terminating correctly

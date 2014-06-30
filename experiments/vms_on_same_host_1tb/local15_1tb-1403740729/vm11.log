@@ -1,0 +1,229 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+(vm11:m0) New mapper on port 23330
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) -> reducer data size 4886718345
+(vm11:m0) Mapper thread started
+(vm11:m0) Allocating data for reducer vm1:r0
+(vm11:m0) Allocating data for reducer vm2:r0
+(vm11:m0) Allocating data for reducer vm3:r0
+(vm11:m0) Allocating data for reducer vm4:r0
+(vm11:m0) Allocating data for reducer vm5:r0
+(vm11:m0) Allocating data for reducer vm6:r0
+(vm11:m0) Allocating data for reducer vm7:r0
+(vm11:m0) Allocating data for reducer vm8:r0
+(vm11:m0) Allocating data for reducer vm9:r0
+(vm11:m0) Allocating data for reducer vm10:r0
+(vm11:m0) Allocating data for reducer vm11:r0
+(vm11:m0) Allocating data for reducer vm12:r0
+(vm11:m0) Allocating data for reducer vm13:r0
+(vm11:m0) Allocating data for reducer vm14:r0
+(vm11:m0) Allocating data for reducer vm15:r0
+(vm11:m0) Binding to port 23330
+(vm11:r0) New reducer
+(vm11:r0) Reducer thread started
+(vm11:r0) waiting for START message
+(vm11:r0) got START message
+(vm11:r0) Starting new connection thread
+(vm11:r0) Starting new connection thread
+(vm11:r0) Starting new connection thread
+(vm11:r0) Starting new connection thread
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:r0:2) Connection established
+(vm11:r0:4) Connection established
+(vm11:r0:3) Connection established
+(vm11:r0:1) Connection established
+(vm11:r0:2) Connection finished, received 4886718346 bytes
+(vm11:r0:1) Connection finished, received 4886718346 bytes
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 14 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:r0:4) Connection finished, received 4886718346 bytes
+(vm11:r0:3) Connection finished, received 4886718346 bytes
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 13 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm1:r0
+(vm11:m0:0) thread started, have to send 4886718345 bytes
+(vm11:m0:0) all data sent, thread exiting
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 12 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm6:r0
+(vm11:m0:5) thread started, have to send 4886718345 bytes
+(vm11:m0:5) all data sent, thread exiting
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 11 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm10:r0
+(vm11:m0:9) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm7:r0
+(vm11:m0:6) thread started, have to send 4886718345 bytes
+(vm11:m0:9) all data sent, thread exiting
+(vm11:m0:6) all data sent, thread exiting
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 10 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm8:r0
+(vm11:m0:7) thread started, have to send 4886718345 bytes
+(vm11:m0:7) all data sent, thread exiting
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 9 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm11:r0
+(vm11:m0:10) thread started, have to send 4886718345 bytes
+(vm11:m0:10) all data sent, thread exiting
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 8 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0) Got connection from reducer vm9:r0
+(vm11:m0:8) thread started, have to send 4886718345 bytes
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 7 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0:8) all data sent, thread exiting
+(vm11:m0) Got connection from reducer vm15:r0
+(vm11:m0:14) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm12:r0
+(vm11:m0:11) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm13:r0
+(vm11:m0:12) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm14:r0
+(vm11:m0:13) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm2:r0
+(vm11:m0:1) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm5:r0
+(vm11:m0:4) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm3:r0
+(vm11:m0:2) thread started, have to send 4886718345 bytes
+(vm11:m0) Got connection from reducer vm4:r0
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 0 joined, 14 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0:3) thread started, have to send 4886718345 bytes
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 6 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:m0:14) all data sent, thread exiting
+(vm11:m0:11) all data sent, thread exiting
+(vm11:m0:12) all data sent, thread exiting
+(vm11:m0:3) all data sent, thread exiting
+(vm11:m0:13) all data sent, thread exiting
+(vm11:m0:2) all data sent, thread exiting
+(vm11:m0:4) all data sent, thread exiting
+(vm11:m0:1) all data sent, thread exiting
+(vm11:m0) thread 1 joined, 13 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 2 joined, 12 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 3 joined, 11 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 4 joined, 10 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 5 joined, 9 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 6 joined, 8 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 7 joined, 7 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 8 joined, 6 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 9 joined, 5 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 10 joined, 4 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 11 joined, 3 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 12 joined, 2 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 13 joined, 1 connections remaining
+(vm11:m0) Waiting for a thread to finish
+(vm11:m0) thread 14 joined, 0 connections remaining
+(vm11:m0) all done, exiting
+*RES* start node vm11:m0
+*RES* vm11:m0:0,1403740914768,9244,4131,4886718346
+*RES* vm11:m0:1,1403741090879,30810,2922,4886718346
+*RES* vm11:m0:2,1403741091067,30502,2866,4886718346
+*RES* vm11:m0:3,1403741091120,30286,2837,4886718346
+*RES* vm11:m0:4,1403741090984,30600,2879,4886718346
+*RES* vm11:m0:5,1403740972936,9473,4101,4886718346
+*RES* vm11:m0:6,1403741014498,9570,3938,4886718346
+*RES* vm11:m0:7,1403741044592,10687,4267,4886718346
+*RES* vm11:m0:8,1403741078385,9030,2941,4886718346
+*RES* vm11:m0:9,1403741004748,11073,3953,4886718346
+*RES* vm11:m0:10,1403741069876,4666,768,4886718346
+*RES* vm11:m0:11,1403741090031,30235,2889,4886718346
+*RES* vm11:m0:12,1403741090216,30488,2879,4886718346
+*RES* vm11:m0:13,1403741090826,30706,2848,4886718346
+*RES* vm11:m0:14,1403741087972,26161,2981,4886718346
+*RES* end node vm11:m0
+Node vm11:m0 joined
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 5 connections remaining
+(vm11:r0) Starting new connection thread
+(vm11:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm11:r0:0) Connection established
+(vm11:r0:0) Connection finished, received 4886718346 bytes
+(vm11:r0) thread 0 joined, 4 connections remaining
+(vm11:r0) Maximum number of connections reached (4), waiting for a thread to finish
+(vm11:r0) thread 1 joined, 3 connections remaining
+(vm11:r0) Maximum number of connections reached (3), waiting for a thread to finish
+(vm11:r0) thread 2 joined, 2 connections remaining
+(vm11:r0) Maximum number of connections reached (2), waiting for a thread to finish
+(vm11:r0) thread 3 joined, 1 connections remaining
+(vm11:r0) Maximum number of connections reached (1), waiting for a thread to finish
+(vm11:r0) thread 4 joined, 0 connections remaining
+(vm11:r0) all done, exiting
+*RES* start node vm11:r0
+*RES* vm11:r0:0,1403740766978,74550,4416,4886718346
+*RES* vm11:r0:0,1403740841532,57638,4060,4886718346
+*RES* vm11:r0:0,1403740899176,55832,3816,4886718346
+*RES* vm11:r0:0,1403740955012,46722,3807,4886718346
+*RES* vm11:r0:0,1403741001740,38753,3771,4886718346
+*RES* vm11:r0:0,1403741040500,29370,3691,4886718346
+*RES* vm11:r0:0,1403741069876,4668,1935,4886718346
+*RES* vm11:r0:0,1403741074548,9447,3366,4886718346
+*RES* vm11:r0:0,1403741084005,18815,3043,4886718346
+*RES* vm11:r0:0,1403741102864,22148,3064,4886718346
+*RES* vm11:r0:0,1403741125016,8520,3299,4886718346
+*RES* vm11:r0:1,1403740766978,72668,4351,4886718346
+*RES* vm11:r0:2,1403740766978,72570,4412,4886718346
+*RES* vm11:r0:3,1403740766978,79096,4484,4886718346
+*RES* vm11:r0:4,1403740766977,74692,4432,4886718346
+*RES* end node vm11:r0
+Node vm11:r0 joined
+Worker terminating correctly
