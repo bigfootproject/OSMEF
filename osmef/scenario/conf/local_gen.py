@@ -6,9 +6,9 @@ numvms = int(sys.argv[1])
 
 out = '''
 [description]
-name = local{0}
+name = local{0}_1tb
 # Shuffle size in GB
-total_shuffle_size = 10
+total_shuffle_size = 1024
 num_vms = {0}'''.format(numvms)
 
 vmtext = '''
@@ -21,4 +21,4 @@ num_reducers = 1'''
 for i in range(numvms):
         out += vmtext.format(i + 1)
 
-open("local{0}.scen".format(numvms), "w").write(out)
+open("local{0}_1tb.scen".format(numvms), "w").write(out)
