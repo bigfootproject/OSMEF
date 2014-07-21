@@ -1,0 +1,565 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+(vm32:m0) New mapper on port 23330
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) -> reducer data size 722887329
+(vm32:m0) Mapper thread started
+(vm32:m0) Allocating data for reducer vm1:r0
+(vm32:m0) Allocating data for reducer vm2:r0
+(vm32:m0) Allocating data for reducer vm3:r0
+(vm32:m0) Allocating data for reducer vm4:r0
+(vm32:m0) Allocating data for reducer vm5:r0
+(vm32:m0) Allocating data for reducer vm6:r0
+(vm32:m0) Allocating data for reducer vm7:r0
+(vm32:m0) Allocating data for reducer vm8:r0
+(vm32:m0) Allocating data for reducer vm9:r0
+(vm32:m0) Allocating data for reducer vm10:r0
+(vm32:m0) Allocating data for reducer vm11:r0
+(vm32:m0) Allocating data for reducer vm12:r0
+(vm32:m0) Allocating data for reducer vm13:r0
+(vm32:m0) Allocating data for reducer vm14:r0
+(vm32:m0) Allocating data for reducer vm15:r0
+(vm32:m0) Allocating data for reducer vm16:r0
+(vm32:m0) Allocating data for reducer vm17:r0
+(vm32:m0) Allocating data for reducer vm18:r0
+(vm32:m0) Allocating data for reducer vm19:r0
+(vm32:m0) Allocating data for reducer vm20:r0
+(vm32:m0) Allocating data for reducer vm21:r0
+(vm32:m0) Allocating data for reducer vm22:r0
+(vm32:m0) Allocating data for reducer vm23:r0
+(vm32:m0) Allocating data for reducer vm24:r0
+(vm32:m0) Allocating data for reducer vm25:r0
+(vm32:m0) Allocating data for reducer vm26:r0
+(vm32:m0) Allocating data for reducer vm27:r0
+(vm32:m0) Allocating data for reducer vm28:r0
+(vm32:m0) Allocating data for reducer vm29:r0
+(vm32:m0) Allocating data for reducer vm30:r0
+(vm32:m0) Allocating data for reducer vm31:r0
+(vm32:m0) Allocating data for reducer vm32:r0
+(vm32:m0) Allocating data for reducer vm33:r0
+(vm32:m0) Allocating data for reducer vm34:r0
+(vm32:m0) Allocating data for reducer vm35:r0
+(vm32:m0) Allocating data for reducer vm36:r0
+(vm32:m0) Allocating data for reducer vm37:r0
+(vm32:m0) Allocating data for reducer vm38:r0
+(vm32:m0) Allocating data for reducer vm39:r0
+(vm32:m0) Binding to port 23330
+(vm32:r0) New reducer
+(vm32:r0) Reducer thread started
+(vm32:r0) waiting for START message
+(vm32:r0) got START message
+(vm32:r0) Starting new connection thread
+(vm32:r0) Starting new connection thread
+(vm32:r0) Starting new connection thread
+(vm32:r0) Starting new connection thread
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:4) Connection established
+(vm32:r0:1) Connection established
+(vm32:r0:3) Connection established
+(vm32:r0:2) Connection established
+(vm32:r0:0) Connection established
+(vm32:r0:2) Connection finished, received 722887330 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 38 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:1) Connection finished, received 722887330 bytes
+(vm32:r0:3) Connection finished, received 722887330 bytes
+(vm32:r0:4) Connection finished, received 722887330 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 37 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 36 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm38:r0
+(vm32:m0:37) thread started, have to send 722887329 bytes
+(vm32:m0:37) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 35 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 34 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm39:r0
+(vm32:m0:38) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 33 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:38) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm1:r0
+(vm32:m0:0) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm26:r0
+(vm32:m0:25) thread started, have to send 722887329 bytes
+(vm32:m0:0) all data sent, thread exiting
+(vm32:m0:25) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm35:r0
+(vm32:m0:34) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 32 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm36:r0
+(vm32:m0:35) thread started, have to send 722887329 bytes
+(vm32:m0:34) all data sent, thread exiting
+(vm32:m0:35) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 31 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm21:r0
+(vm32:m0:20) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm6:r0
+(vm32:m0:5) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 30 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:20) all data sent, thread exiting
+(vm32:m0:5) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm33:r0
+(vm32:m0:32) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm7:r0
+(vm32:m0:6) thread started, have to send 722887329 bytes
+(vm32:m0:32) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 29 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:6) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm10:r0
+(vm32:m0:9) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 28 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:9) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 27 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm25:r0
+(vm32:m0:24) thread started, have to send 722887329 bytes
+(vm32:m0:24) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 26 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm15:r0
+(vm32:m0:14) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm11:r0
+(vm32:m0:10) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 25 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm9:r0
+(vm32:m0:8) thread started, have to send 722887329 bytes
+(vm32:m0:14) all data sent, thread exiting
+(vm32:m0:10) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 24 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm24:r0
+(vm32:m0:23) thread started, have to send 722887329 bytes
+(vm32:m0:8) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm8:r0
+(vm32:m0:7) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 23 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:23) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm34:r0
+(vm32:m0:33) thread started, have to send 722887329 bytes
+(vm32:m0:7) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm14:r0
+(vm32:m0:13) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 22 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:13) all data sent, thread exiting
+(vm32:m0:33) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 21 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 20 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm37:r0
+(vm32:m0:36) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm13:r0
+(vm32:m0:12) thread started, have to send 722887329 bytes
+(vm32:m0:36) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 19 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm18:r0
+(vm32:m0:17) thread started, have to send 722887329 bytes
+(vm32:m0:12) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm22:r0
+(vm32:m0:21) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 18 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:17) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm23:r0
+(vm32:m0:22) thread started, have to send 722887329 bytes
+(vm32:m0:21) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm27:r0
+(vm32:m0:26) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm31:r0
+(vm32:m0:30) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 17 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:22) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm30:r0
+(vm32:m0:29) thread started, have to send 722887329 bytes
+(vm32:m0:26) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 16 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm19:r0
+(vm32:m0:18) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm2:r0
+(vm32:m0:1) thread started, have to send 722887329 bytes
+(vm32:m0:29) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm12:r0
+(vm32:m0:11) thread started, have to send 722887329 bytes
+(vm32:m0:30) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm20:r0
+(vm32:m0:19) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm29:r0
+(vm32:m0:28) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm28:r0
+(vm32:m0:27) thread started, have to send 722887329 bytes
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 15 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:m0) Got connection from reducer vm16:r0
+(vm32:r0:0) Connection established
+(vm32:m0:15) thread started, have to send 722887329 bytes
+(vm32:m0:18) all data sent, thread exiting
+(vm32:m0:1) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm5:r0
+(vm32:m0:4) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm4:r0
+(vm32:m0:3) thread started, have to send 722887329 bytes
+(vm32:m0:11) all data sent, thread exiting
+(vm32:m0:19) all data sent, thread exiting
+(vm32:m0) Got connection from reducer vm17:r0
+(vm32:m0:16) thread started, have to send 722887329 bytes
+(vm32:m0) Got connection from reducer vm3:r0
+(vm32:m0:2) thread started, have to send 722887329 bytes
+(vm32:m0:28) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 14 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0:27) all data sent, thread exiting
+(vm32:m0:15) all data sent, thread exiting
+(vm32:m0:4) all data sent, thread exiting
+(vm32:m0:3) all data sent, thread exiting
+(vm32:m0:16) all data sent, thread exiting
+(vm32:m0:2) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 13 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 12 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:m0) Got connection from reducer vm32:r0
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 0 joined, 38 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 1 joined, 37 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 2 joined, 36 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 3 joined, 35 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 4 joined, 34 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 5 joined, 33 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 6 joined, 32 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 7 joined, 31 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 8 joined, 30 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 9 joined, 29 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 10 joined, 28 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 11 joined, 27 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 12 joined, 26 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 13 joined, 25 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 14 joined, 24 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 15 joined, 23 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 16 joined, 22 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 17 joined, 21 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 18 joined, 20 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 19 joined, 19 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 20 joined, 18 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 21 joined, 17 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 22 joined, 16 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 23 joined, 15 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 24 joined, 14 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 25 joined, 13 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 26 joined, 12 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 27 joined, 11 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 28 joined, 10 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 29 joined, 9 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 30 joined, 8 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0:31) thread started, have to send 722887329 bytes
+(vm32:m0:31) all data sent, thread exiting
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 11 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:m0) thread 31 joined, 7 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 32 joined, 6 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 33 joined, 5 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 34 joined, 4 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 35 joined, 3 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 36 joined, 2 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 37 joined, 1 connections remaining
+(vm32:m0) Waiting for a thread to finish
+(vm32:m0) thread 38 joined, 0 connections remaining
+(vm32:m0) all done, exiting
+*RES* start node vm32:m0
+*RES* vm32:m0:0,1405724954802,4750,1213,722887330
+*RES* vm32:m0:1,1405725089128,3947,623,722887330
+*RES* vm32:m0:2,1405725096018,3925,664,722887330
+*RES* vm32:m0:3,1405725094923,4494,658,722887330
+*RES* vm32:m0:4,1405725094822,4573,665,722887330
+*RES* vm32:m0:5,1405724991034,4520,1224,722887330
+*RES* vm32:m0:6,1405725004434,5023,1251,722887330
+*RES* vm32:m0:7,1405725055626,4447,1130,722887330
+*RES* vm32:m0:8,1405725049374,5114,1532,722887330
+*RES* vm32:m0:9,1405725017138,3730,1211,722887330
+*RES* vm32:m0:10,1405725045567,5426,1383,722887330
+*RES* vm32:m0:11,1405725090291,4636,632,722887330
+*RES* vm32:m0:12,1405725077966,2703,742,722887330
+*RES* vm32:m0:13,1405725060202,5228,1180,722887330
+*RES* vm32:m0:14,1405725044514,5115,1463,722887330
+*RES* vm32:m0:15,1405725092086,4952,648,722887330
+*RES* vm32:m0:16,1405725095526,4394,690,722887330
+*RES* vm32:m0:17,1405725080202,2438,557,722887330
+*RES* vm32:m0:18,1405725088947,3559,610,722887330
+*RES* vm32:m0:19,1405725090586,4681,626,722887330
+*RES* vm32:m0:20,1405724984950,9269,959,722887330
+*RES* vm32:m0:21,1405725081626,2367,562,722887330
+*RES* vm32:m0:22,1405725082740,2734,658,722887330
+*RES* vm32:m0:23,1405725053828,5247,1010,722887330
+*RES* vm32:m0:24,1405725032894,4419,1456,722887330
+*RES* vm32:m0:25,1405724958725,5727,1126,722887330
+*RES* vm32:m0:26,1405725084095,3644,667,722887330
+*RES* vm32:m0:27,1405725091854,5009,644,722887330
+*RES* vm32:m0:28,1405725091140,5214,646,722887330
+*RES* vm32:m0:29,1405725085691,3655,652,722887330
+*RES* vm32:m0:30,1405725084730,5651,602,722887330
+*RES* vm32:m0:31,1405725103322,1336,151,722887330
+*RES* vm32:m0:32,1405725001498,5759,1316,722887330
+*RES* vm32:m0:33,1405725059994,5687,1044,722887330
+*RES* vm32:m0:34,1405724965322,4477,1396,722887330
+*RES* vm32:m0:35,1405724969458,4245,1089,722887330
+*RES* vm32:m0:36,1405725075426,2921,639,722887330
+*RES* vm32:m0:37,1405724903686,5428,1792,722887330
+*RES* vm32:m0:38,1405724947350,4179,1386,722887330
+*RES* end node vm32:m0
+Node vm32:m0 joined
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 10 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 9 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 8 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 7 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 6 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 5 connections remaining
+(vm32:r0) Starting new connection thread
+(vm32:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm32:r0:0) Connection established
+(vm32:r0:0) Connection finished, received 722887330 bytes
+(vm32:r0) thread 0 joined, 4 connections remaining
+(vm32:r0) Maximum number of connections reached (4), waiting for a thread to finish
+(vm32:r0) thread 1 joined, 3 connections remaining
+(vm32:r0) Maximum number of connections reached (3), waiting for a thread to finish
+(vm32:r0) thread 2 joined, 2 connections remaining
+(vm32:r0) Maximum number of connections reached (2), waiting for a thread to finish
+(vm32:r0) thread 3 joined, 1 connections remaining
+(vm32:r0) Maximum number of connections reached (1), waiting for a thread to finish
+(vm32:r0) thread 4 joined, 0 connections remaining
+(vm32:r0) all done, exiting
+*RES* start node vm32:r0
+*RES* vm32:r0:0,1405724765079,26383,728,722887330
+*RES* vm32:r0:0,1405724791468,50033,880,722887330
+*RES* vm32:r0:0,1405724841506,41804,1002,722887330
+*RES* vm32:r0:0,1405724883314,27341,804,722887330
+*RES* vm32:r0:0,1405724910662,23607,884,722887330
+*RES* vm32:r0:0,1405724934293,15957,610,722887330
+*RES* vm32:r0:0,1405724950254,15449,753,722887330
+*RES* vm32:r0:0,1405724965714,13153,919,722887330
+*RES* vm32:r0:0,1405724978874,13211,842,722887330
+*RES* vm32:r0:0,1405724992098,15477,1026,722887330
+*RES* vm32:r0:0,1405725007582,11121,954,722887330
+*RES* vm32:r0:0,1405725018714,12937,1457,722887330
+*RES* vm32:r0:0,1405725031658,7559,1287,722887330
+*RES* vm32:r0:0,1405725039222,6829,1216,722887330
+*RES* vm32:r0:0,1405725046077,5622,1048,722887330
+*RES* vm32:r0:0,1405725051710,6761,985,722887330
+*RES* vm32:r0:0,1405725058479,6071,1386,722887330
+*RES* vm32:r0:0,1405725064558,5182,901,722887330
+*RES* vm32:r0:0,1405725069746,4392,844,722887330
+*RES* vm32:r0:0,1405725074146,5082,813,722887330
+*RES* vm32:r0:0,1405725079234,2888,671,722887330
+*RES* vm32:r0:0,1405725082138,3214,635,722887330
+*RES* vm32:r0:0,1405725085367,3199,629,722887330
+*RES* vm32:r0:0,1405725088574,3484,578,722887330
+*RES* vm32:r0:0,1405725092073,4582,578,722887330
+*RES* vm32:r0:0,1405725096690,3769,613,722887330
+*RES* vm32:r0:0,1405725100466,2840,639,722887330
+*RES* vm32:r0:0,1405725103310,1351,396,722887330
+*RES* vm32:r0:0,1405725104666,1376,581,722887330
+*RES* vm32:r0:0,1405725106046,1181,441,722887330
+*RES* vm32:r0:0,1405725107234,1260,561,722887330
+*RES* vm32:r0:0,1405725108502,952,430,722887330
+*RES* vm32:r0:0,1405725109458,1162,388,722887330
+*RES* vm32:r0:0,1405725110626,1150,398,722887330
+*RES* vm32:r0:0,1405725111782,915,395,722887330
+*RES* vm32:r0:1,1405724765079,26933,721,722887330
+*RES* vm32:r0:2,1405724765079,24178,712,722887330
+*RES* vm32:r0:3,1405724765079,26945,726,722887330
+*RES* vm32:r0:4,1405724765079,31026,724,722887330
+*RES* end node vm32:r0
+Node vm32:r0 joined
+Worker terminating correctly

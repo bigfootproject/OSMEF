@@ -22,7 +22,7 @@ args = arg_parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("novaclient").setLevel(logging.INFO)
-logging.getLogger("osmef.ssh").setLevel(logging.INFO)
+logging.getLogger("osmef.ssh").setLevel(logging.DEBUG)
 
 sm = parser.ScenarioManager()
 
