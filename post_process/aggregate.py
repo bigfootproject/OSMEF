@@ -130,7 +130,7 @@ def preprocess(data):
 
 
 if len(sys.argv) < 3:
-    print "Usage: ./aggregate.py <base_dir> <scenario_name>"
+    print("Usage: ./aggregate.py <base_dir> <scenario_name>")
     sys.exit(1)
 
 base_dir = sys.argv[1]
@@ -147,7 +147,7 @@ fun_toInt = lambda x: int(x.strip())
 
 throughput = 0
 throughput_std = 0
-first_sample = data[scenario]["raw"].keys()[0]
+first_sample = list(data[scenario]["raw"].keys())[0]
 for vm in data[scenario]["raw"][first_sample]:
     print("Looking at VM %s for sample %s" % (vm, first_sample))
     for node in data[scenario]["raw"][first_sample][vm]:
