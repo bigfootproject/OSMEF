@@ -4,6 +4,7 @@ import socket
 import struct
 
 CMD_LISTEN_PORT = 2333
+CMD_DATA_LEN = 2048
 
 commands = {
     'CMD_EXIT': 0,
@@ -26,16 +27,16 @@ def _send_msg(vm, cmd, data):
     log.debug("Sending command {} to '{}'".format(cmd, vm["name"]))
     msg = "{}|{}".format(commands[cmd], data)
     print(msg)
-    if len(msg) > 1024:
-        log.error("Sending message longer than 1024 bytes, it will be truncated")
-    msg = struct.pack("1024s", bytes(msg, "ASCII"))
+    if len(msg) > CMD_DATA_LEN:
+        log.error("Sending message longer than {} bytes, it will be truncated".format(CMD_DATA_LEN))
+    msg = struct.pack("{}s".format(CMD_DATA_LEN), bytes(msg, "ASCII"))
     vm["conn"].send(msg)
 
 
 def _recv_reply(vm):
-    data = vm["conn"].recv(1024)
+    data = vm["conn"].recv(CMD_DATA_LEN)
     try:
-        data = struct.unpack("1024s", data)[0]
+        data = struct.unpack("{}s".format(CMD_DATA_LEN), data)[0]
     except struct.error:
         return None
     data = bytearray(data)

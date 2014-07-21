@@ -18,7 +18,7 @@
 
 #define CMD_LISTEN_PORT 2333
 #define DATA_CHUNK_SIZE 65536
-#define CMD_DATA_LEN 1024
+#define CMD_DATA_LEN 2048
 #define NAME_LEN 16
 #define RESULT_PFX "*RES* "
 
@@ -162,13 +162,13 @@ struct msg* receive_command(int s)
 	ssize_t ret;
 	struct msg* tmp = calloc(1, sizeof(struct msg));
 	check_alloc(tmp, "receive_command_1");
-	char buf[1024], *aux;
-	ret = recv(s, buf, 1024, MSG_WAITALL);
-	if (ret != 1024) {
+	char buf[CMD_DATA_LEN], *aux;
+	ret = recv(s, buf, CMD_DATA_LEN, MSG_WAITALL);
+	if (ret != CMD_DATA_LEN) {
 		fprintf(logfp, "Received only %ld bytes in command message\n", ret);
 		tmp->type = MSG_EXIT;
 	}
-	buf[1023] = '\0';
+	buf[CMD_DATA_LEN-1] = '\0';
 	aux = strtok(buf, "|");
 	tmp->type = atol(aux);
 	aux = strtok(NULL, "|");
