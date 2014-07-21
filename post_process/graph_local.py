@@ -32,7 +32,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 lines = []
 
-xpoints = range(2, 35)
+xpoints = range(2, 41)
 btc_data = []
 err_data = []
 for c in xpoints:
