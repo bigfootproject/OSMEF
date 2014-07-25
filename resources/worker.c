@@ -83,18 +83,19 @@ struct reducer_args {
 
 struct reducer_connection_args {
 	struct sockaddr_in addr;
-	int id;
 	char* mapper_name;
-	char* name;
-	sem_t* finish_sem;
 };
 
 struct reducer_conn_thread {
-	int free;
+	struct reducer_connection_args* mappers;
+	int num_mappers;
 	pthread_t th;
+	char* reducer_name;
+	int id;
 };
 
 struct measurement {
+	int empty;
 	char th_name[NAME_LEN];
 	long long time_start_ms;
 	unsigned int time_elapsed;
@@ -428,94 +429,116 @@ void new_mapper(pthread_t *node, int id, char* data)
 	pthread_barrier_destroy(&args->ready); // Will not be used again
 }
 
-void* reducer_connection(void* vargs)
+void* reducer_connection(void* varg)
 {
-	struct reducer_connection_args* args = vargs;
-	int s, ret;
+	struct reducer_conn_thread* arg = varg;
+	int ret, i;
 	char buf[DATA_CHUNK_SIZE];
+	char conn_name[NAME_LEN];
 	char my_name[NAME_LEN];
 	ssize_t data_recv_size = 0;
 	char* end_character = NULL;
-	struct measurement* result;
+	struct measurement** results;
 	long long time_s, time_e;
 
-	result = malloc(sizeof(struct measurement));
-	check_alloc(result, "reducer_connection_1");
+	results = malloc(arg->num_mappers * sizeof(struct measurement*));
+	check_alloc(results, "reducer_connection_1");
+	for (i = 0; i < arg->num_mappers; i++) {
+		results[i] = malloc(sizeof(struct measurement));
+		results[i]->empty = 1;
+	}
+	snprintf(my_name, NAME_LEN, "%s:th%d", arg->reducer_name, arg->id);
 
-	snprintf(my_name, NAME_LEN, "%s:%d", args->name, args->id);
-	strncpy(result->th_name, my_name, NAME_LEN);
 
-	s = socket(AF_INET, SOCK_STREAM, 0);
+	for (i = 0; i < arg->num_mappers; i++) {
+		int s = socket(AF_INET, SOCK_STREAM, 0);
+		// This connection name
+		snprintf(conn_name, NAME_LEN, "%s:%d", my_name, i);
+		strncpy(results[i]->th_name, conn_name, NAME_LEN);
+		// Begin measurements
+		results[i]->time_start_ms = get_wall_time_ms();
+		time_s = get_timestamp_ms();
+		// Connect
+		ret = connect(s, &arg->mappers[i].addr, sizeof(struct sockaddr_in));
+		if (ret) {
+			fprintf(logfp, "(%s) Connection error with mapper %s\n", conn_name, arg->mappers[i].mapper_name);
+			fprintf(logfp, "(%s) -> error was: %s\n", conn_name, strerror(errno)); // not threadsafe
+			continue; // try to continue with the next mapper
+		} else {
+			fprintf(logfp, "(%s) Connection established with mapper %s\n", conn_name, arg->mappers[i].mapper_name);
+		}
+		// Send reducer name and receive the data, looking for the end character
+		send(s, arg->reducer_name, NAME_LEN, 0);
+		do {
+			ret = recv(s, buf, DATA_CHUNK_SIZE, 0);
+			data_recv_size += ret;
+			end_character = memchr(buf, 0xFF, ret);
+		} while (end_character == NULL);
 
-	result->time_start_ms = get_wall_time_ms();
-	time_s = get_timestamp_ms();
+		close(s);
 
-	ret = connect(s, &args->addr, sizeof(struct sockaddr_in));
-	if (ret) {
-		fprintf(logfp, "Connection error\n");
+		// End measurements
+		time_e = get_timestamp_ms();
+		results[i]->time_elapsed = time_e - time_s;
+		results[i]->bytes_moved = data_recv_size;
+		results[i]->thread_time = get_thread_time_ms();
+		results[i]->empty = 0;
+
+		fprintf(logfp, "(%s) Connection to %s finished, received %ld bytes\n", conn_name, arg->mappers[i].mapper_name, data_recv_size);
 	}
 
-	fprintf(logfp, "(%s) Connection established with %s\n", my_name, args->mapper_name);
+	fprintf(logfp, "(%s) Got data from all mappers, this reducer connection has finished.\n", my_name);
 
-	send(s, args->name, NAME_LEN, 0);
-	do {
-		ret = recv(s, buf, DATA_CHUNK_SIZE, 0);
-		data_recv_size += ret;
-		end_character = memchr(buf, 0xFF, ret);
-	} while (end_character == NULL);
-
-	time_e = get_timestamp_ms();
-	result->time_elapsed = time_e - time_s;
-	result->bytes_moved = data_recv_size;
-	result->thread_time = get_thread_time_ms();
-
-	close(s);
-	fprintf(logfp, "(%s) Connection to %s finished, received %ld bytes\n", my_name, args->mapper_name, data_recv_size);
-	sem_post(args->finish_sem);
-	return result;
+	return results;
 }
 
 void* reducer(void* vargs)
 {
 	struct reducer_args* args = vargs;
 	struct reducer_conn_thread* conns;
-	struct reducer_connection_args* mappers;
 	struct results* results;
-	int i, ret, to_start, remaining, conn_count = 0, next_mapper = 0;
-	sem_t th_completion_sem;
+	int i, j, remaining = 0, map_per_conn_count;
+	int cur_conn = 0, cur_map = 0;
+	struct measurement** free_measurement;
 
 	fprintf(logfp, "(%s) Reducer thread started\n", args->name);
 
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-	mappers = malloc(args->num_mappers * sizeof(struct reducer_connection_args));
-	check_alloc(mappers, "reducer_1");
-	for (i = 0; i < args->num_mappers; i++) {
-		mappers[i].addr.sin_family = AF_INET;
-		mappers[i].addr.sin_port = htons(args->addresses[i].port);
-		mappers[i].addr.sin_addr = args->addresses[i].addr;
-		mappers[i].mapper_name = args->addresses[i].name;
-		mappers[i].name = args->name;
-		mappers[i].finish_sem = &th_completion_sem;
-	}
-
 	conns = malloc(args->num_concurrent_conn * sizeof(struct reducer_conn_thread));
 	check_alloc(conns, "reducer_2");
+
+	map_per_conn_count = (args->num_mappers / args->num_concurrent_conn) + 1;
+	
 	for (i = 0; i < args->num_concurrent_conn; i++) {
-		conns[i].free = 1;
+		conns[i].mappers = calloc(map_per_conn_count, sizeof(struct reducer_connection_args));
+		check_alloc(conns[i].mappers, "reducer_3");
+		conns[i].num_mappers = 0;
+		conns[i].reducer_name = args->name;
+		conns[i].id = i;
+	}
+	for (j = 0; j < args->num_mappers; j++) {
+		conns[cur_conn].mappers[cur_map].addr.sin_family = AF_INET;
+		conns[cur_conn].mappers[cur_map].addr.sin_port = htons(args->addresses[j].port);
+		conns[cur_conn].mappers[cur_map].addr.sin_addr = args->addresses[j].addr;
+		conns[cur_conn].mappers[cur_map].mapper_name = args->addresses[j].name;
+		conns[cur_conn].num_mappers++;
+		fprintf(stderr, "(%s) th%d will connect to %s in position %d\n", args->name, cur_conn, conns[cur_conn].mappers[cur_map].mapper_name, cur_map);
+		cur_conn++;
+		if ((cur_conn % args->num_concurrent_conn) == 0) {
+			cur_conn = 0;
+			cur_map++;
+		}
 	}
 
 	results = malloc(sizeof(struct results));
 	check_alloc(results, "reducer_3");
+	results->count = 0;
 	results->meas = calloc(args->num_mappers, sizeof(struct measurement*));
 	check_alloc(results->meas, "reducer_4");
 	strncpy(results->th_name, args->name, NAME_LEN);
-	results->count = args->num_mappers;
-
-	to_start = remaining = args->num_mappers;
-
-	sem_init(&th_completion_sem, 0, 0);
+	free_measurement = results->meas;
 
 	// Signal that we are ready
 	pthread_barrier_wait(&args->ready);
@@ -524,49 +547,41 @@ void* reducer(void* vargs)
 	pthread_barrier_wait(args->start);
 	fprintf(logfp, "(%s) got START message\n", args->name);
 
-	while (remaining > 0) {
-		if (to_start > 0 && conn_count < args->num_concurrent_conn) {
-			fprintf(logfp, "(%s) Starting new connection thread\n", args->name);
-			i = 0;
-			while (!conns[i].free) {
-				i++;
-			}
-			mappers[next_mapper].id = i;
-			conns[i].free = 0;
-			pthread_create(&conns[i].th, NULL, reducer_connection, &mappers[next_mapper]);
+	// Start all conn threads and wait for their termination
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		if (conns[i].num_mappers > 0) {
+			pthread_create(&conns[i].th, NULL, reducer_connection, &conns[i]);
 			pthread_setname_np(conns[i].th, args->name);
-			fprintf(logfp, "(%s) new thread ID: %lx\n", args->name, conns[i].th);
-			conn_count++;
-			next_mapper++;
-			to_start--;
-		} else {
+			fprintf(logfp, "(%s) new thread ID: th%d\n", args->name, conns[i].id);
+		}
+		remaining++;
+	}
+
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		if (conns[i].num_mappers > 0) {
 			void* result;
-			fprintf(logfp, "(%s) Maximum number of connections reached (%d), waiting for a thread to finish\n", args->name, conn_count);
-			sem_wait(&th_completion_sem);
-			i = 0;
-			do {
-				result = NULL;
-				while (conns[i].free) { // There is at least one that is not free
-					i = (i + 1) % args->num_concurrent_conn;
-				}
-				ret = pthread_tryjoin_np(conns[i].th, &result);
-			} while (ret != 0);
+			struct measurement** r_meas;
+			pthread_join(conns[i].th, &result);
 			assert(result != NULL);
 			remaining--;
-			conn_count--;
-			conns[i].free = 1;
-			fprintf(logfp, "(%s) thread %d (%lx) joined, %d connections remaining\n", args->name, i, conns[i].th, remaining);
-			i = 0;
-			while (results->meas[i] != NULL) {
-				i++;
+			fprintf(logfp, "(%s) thread th%d joined, %d connection threads remaining\n", args->name, conns[i].id, remaining);
+			r_meas = result;
+			for (j = 0; j < conns[i].num_mappers; j++) {
+				if (!r_meas[j]->empty) {
+					*(free_measurement) = r_meas[j];
+					results->count++;
+					free_measurement++;
+				} else {
+					free(r_meas[j]);
+				}
 			}
-			results->meas[i] = result;
+			free(result); // Free the list of pointers
 		}
 	}
 
-	sem_destroy(&th_completion_sem);
-
-	free(mappers);
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		free(conns[i].mappers);
+	}
 	free(conns);
 	fprintf(logfp, "(%s) all done, exiting\n", args->name);
 	free(args->addresses);
