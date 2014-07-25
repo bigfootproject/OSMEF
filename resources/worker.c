@@ -62,13 +62,14 @@ struct mapper_connection_args {
 
 struct mapper_conn_thread {
 	int free;
+	int joined;
 	pthread_t th;
 };
 
 struct map_address {
 	unsigned short int port;
 	struct in_addr addr;
-	char reducer_name[NAME_LEN];
+	char name[NAME_LEN];
 };
 
 struct reducer_args {
@@ -83,6 +84,7 @@ struct reducer_args {
 struct reducer_connection_args {
 	struct sockaddr_in addr;
 	int id;
+	char* mapper_name;
 	char* name;
 	sem_t* finish_sem;
 };
@@ -254,7 +256,7 @@ void* mapper(void* vargs)
 	check_alloc(reducers, "mapper_1");
 	for (i = 0; i < args->num_reducers; i++) {
 		int j;
-		fprintf(logfp, "(%s) Allocating data for reducer %s\n", args->name, args->reducer_names[i]);
+//		fprintf(logfp, "(%s) Allocating data for reducer %s\n", args->name, args->reducer_names[i]);
 		reducers[i] = malloc(sizeof(struct mapper_connection_args));
 		check_alloc(reducers[i], "mapper_2");
 		reducers[i]->size = args->reducer_sizes[i];
@@ -269,6 +271,7 @@ void* mapper(void* vargs)
 	check_alloc(conn_threads, "mapper_4");
 	for (i = 0; i < args->num_concurrent_conn; i++) {
 		conn_threads[i].free = 1;
+		conn_threads[i].joined = 1;
 	}
 
 	fprintf(logfp, "(%s) Binding to port %d\n", args->name, args->port);
@@ -332,7 +335,10 @@ void* mapper(void* vargs)
 					reducers[found]->s = peer_s;
 					snprintf(reducers[found]->name, NAME_LEN, "%s:%d", args->name, found);
 					conn_threads[i].free = 0;
+					conn_threads[i].joined = 0;
 					pthread_create(&conn_threads[found].th, NULL, mapper_connection, reducers[found]);
+					pthread_setname_np(conn_threads[found].th, reducers[found]->name);
+					fprintf(logfp, "(%s) new thread ID: %lx\n", reducers[found]->name, conn_threads[found].th);
 					break;
 				}
 			}
@@ -346,7 +352,11 @@ void* mapper(void* vargs)
 				while (conn_threads[i].free) { // There is at least one that is not free
 					i = (i + 1) % args->num_concurrent_conn;
 				}
-				ret = pthread_tryjoin_np(conn_threads[i].th, &result);
+				if (!conn_threads[i].joined) {
+					ret = pthread_join(conn_threads[i].th, &result);
+					assert(ret == 0);
+					conn_threads[i].joined = 1;
+				}
 			} while (ret != 0);
 			assert(result != NULL);
 			current_conn_count--;
@@ -357,7 +367,7 @@ void* mapper(void* vargs)
 				i++;
 			}
 			results->meas[i] = result;
-			fprintf(logfp, "(%s) thread %d joined, %d connections remaining\n", args->name, i, remaining);
+			fprintf(logfp, "(%s) thread %d (%lx) joined, %d connections remaining\n", args->name, i, conn_threads[i].th, remaining);
 		}
 	}
 
@@ -399,6 +409,7 @@ void new_mapper(pthread_t *node, int id, char* data)
 	check_alloc(args->reducer_sizes, "new_mapper_2");
 	args->reducer_names = malloc(args->num_reducers * sizeof(ssize_t));
 	check_alloc(args->reducer_names, "new_mapper_3");
+	fprintf(logfp, "(%s) -> will serve %d reducers\n", args->name, args->num_reducers);
 	for (i = 0; i < args->num_reducers; i++) {
 		args->reducer_names[i] = malloc(NAME_LEN * sizeof(char));
 		check_alloc(args->reducer_names[i], "new_mapper_4");
@@ -406,10 +417,12 @@ void new_mapper(pthread_t *node, int id, char* data)
 		strncpy(args->reducer_names[i], aux, NAME_LEN);
 		aux = strtok(NULL, ",");
 		args->reducer_sizes[i] = atoll(aux);
-		fprintf(logfp, "(%s) -> reducer data size %ld\n", args->name, args->reducer_sizes[i]);
+//		fprintf(logfp, "(%s) -> reducer data size %ld\n", args->name, args->reducer_sizes[i]);
 	}
 
 	pthread_create(node, NULL, mapper, args);
+	pthread_setname_np(*node, args->name);
+	fprintf(logfp, "(%s) new thread ID: %lx\n", args->name, *node);
 
 	pthread_barrier_wait(&args->ready);
 	pthread_barrier_destroy(&args->ready); // Will not be used again
@@ -442,7 +455,7 @@ void* reducer_connection(void* vargs)
 		fprintf(logfp, "Connection error\n");
 	}
 
-	fprintf(logfp, "(%s) Connection established\n", my_name);
+	fprintf(logfp, "(%s) Connection established with %s\n", my_name, args->mapper_name);
 
 	send(s, args->name, NAME_LEN, 0);
 	do {
@@ -457,7 +470,7 @@ void* reducer_connection(void* vargs)
 	result->thread_time = get_thread_time_ms();
 
 	close(s);
-	fprintf(logfp, "(%s) Connection finished, received %ld bytes\n", my_name, data_recv_size);
+	fprintf(logfp, "(%s) Connection to %s finished, received %ld bytes\n", my_name, args->mapper_name, data_recv_size);
 	sem_post(args->finish_sem);
 	return result;
 }
@@ -482,7 +495,8 @@ void* reducer(void* vargs)
 		mappers[i].addr.sin_family = AF_INET;
 		mappers[i].addr.sin_port = htons(args->addresses[i].port);
 		mappers[i].addr.sin_addr = args->addresses[i].addr;
-		mappers[i].name = args->name;	
+		mappers[i].mapper_name = args->addresses[i].name;
+		mappers[i].name = args->name;
 		mappers[i].finish_sem = &th_completion_sem;
 	}
 
@@ -520,6 +534,8 @@ void* reducer(void* vargs)
 			mappers[next_mapper].id = i;
 			conns[i].free = 0;
 			pthread_create(&conns[i].th, NULL, reducer_connection, &mappers[next_mapper]);
+			pthread_setname_np(conns[i].th, args->name);
+			fprintf(logfp, "(%s) new thread ID: %lx\n", args->name, conns[i].th);
 			conn_count++;
 			next_mapper++;
 			to_start--;
@@ -539,7 +555,7 @@ void* reducer(void* vargs)
 			remaining--;
 			conn_count--;
 			conns[i].free = 1;
-			fprintf(logfp, "(%s) thread %d joined, %d connections remaining\n", args->name, i, remaining);
+			fprintf(logfp, "(%s) thread %d (%lx) joined, %d connections remaining\n", args->name, i, conns[i].th, remaining);
 			i = 0;
 			while (results->meas[i] != NULL) {
 				i++;
@@ -569,19 +585,30 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 	check_alloc(reducer_args, "reducer_connection_1");
 
 	pthread_barrier_init(&reducer_args->ready, NULL, 2);
+
+	/* use name from strtok */
 	strncpy(reducer_args->name, aux, NAME_LEN);
-	aux = strtok(NULL, ",");
 	fprintf(logfp, "(%s) New reducer\n", reducer_args->name);
+
+	/* concurrent connections */
+	aux = strtok(NULL, ",");
 	reducer_args->num_concurrent_conn = atol(aux);
+
+	/* number of mappers */
 	aux = strtok(NULL, ",");
 	reducer_args->num_mappers = atol(aux);
+
 	reducer_args->addresses = calloc(reducer_args->num_mappers, sizeof(struct map_address));
 	check_alloc(reducer_args->addresses, "reducer_connection_2");
+
 	for (i = 0; i < reducer_args->num_mappers; i++) {
+		/* mapper name */
 		aux = strtok(NULL, ",");
-		strncpy(reducer_args->addresses[i].reducer_name, aux, NAME_LEN);
+		strncpy(reducer_args->addresses[i].name, aux, NAME_LEN);
+		/* mapper port */
 		aux = strtok(NULL, ",");
 		reducer_args->addresses[i].port = atol(aux);
+		/* mapper ip address */
 		aux = strtok(NULL, ",");
 		ret = inet_pton(AF_INET, aux, &reducer_args->addresses[i].addr);
 		if (!ret) {
@@ -592,6 +619,8 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 	reducer_args->start = barr;
 
 	pthread_create(node, NULL, reducer, reducer_args);
+	pthread_setname_np(*node, reducer_args->name);
+	fprintf(logfp, "(%s) new thread ID: %lx\n", reducer_args->name, *node);
 
 	pthread_barrier_wait(&reducer_args->ready);
 	pthread_barrier_destroy(&reducer_args->ready); // Will not be used again
@@ -620,10 +649,13 @@ void wait_for_results(int num_nodes, pthread_t* nodes)
 	struct results* results;
 
 	for (i = 0; i < num_nodes; i++) {
+		char thname[10];
+		pthread_getname_np(nodes[i], thname, 10);
+		fprintf(logfp, "Waiting for thread %s (%lx) to join...\n", thname, nodes[i]);
 		pthread_join(nodes[i], &retval);
 		results = retval;
 		send_results(results);
-		fprintf(logfp, "Node %s joined\n", results->th_name);
+		fprintf(logfp, "Thread %s (%lx) joined\n", results->th_name, nodes[i]);
 		for (j = 0; j < results->count; j++) {
 			free(results->meas[j]);
 		}

@@ -12,8 +12,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 fake_vm = {"ip": sys.argv[1]}
 fake_vm["name"] = "fake_vm"
-fake_vm["num_reducers"] = 2
-fake_vm["num_mappers"] = 2
+fake_vm["num_reducers"] = 41
+fake_vm["num_mappers"] = 41
 fake_vm["mappers"] = []
 fake_vm["reducers"] = []
 
