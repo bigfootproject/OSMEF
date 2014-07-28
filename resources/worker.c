@@ -50,20 +50,23 @@ struct mapper_args {
 	pthread_barrier_t ready;
 };
 
-struct mapper_connection_args {
-	int s;
+struct mapper_reducer_info {
+	char* data;
 	ssize_t size;
-	char data[DATA_CHUNK_SIZE];
-	int id;
-	char* reducer_name;
-	char name[NAME_LEN];
-	sem_t* finish_sem;
+	char* name;
 };
 
 struct mapper_conn_thread {
-	int free;
-	int joined;
+	int* free;
+	int running;
+	int exit;
+	int s;
+	sem_t* finish_sem;
+	sem_t start_sem;
 	pthread_t th;
+	char name[NAME_LEN];
+	struct mapper_reducer_info* reducer_info;
+	struct measurement* meas;
 };
 
 struct map_address {
@@ -196,91 +199,127 @@ void send_done(int s)
 
 void* mapper_connection(void* vargs)
 {
-	struct mapper_connection_args* args = vargs;
+	struct mapper_conn_thread* args = vargs;
 	ssize_t bytes_sent = 0;
-	struct measurement* result;
+	struct measurement* result = NULL;
 	long long time_s, time_e;
+	char end_char = 0xFF;
 
-	result = malloc(sizeof(struct measurement));
-	check_alloc(result, "mapper_connection_1");
-	strncpy(result->th_name, args->name, NAME_LEN);
+	while (1) {
+		fprintf(logfp, "(%s) waiting for something to do...\n", args->name);
+		sem_wait(&args->start_sem);
 
-	fprintf(logfp, "(%s) thread started, have to send %ld bytes\n", args->name, args->size);
-
-	result->time_start_ms = get_wall_time_ms();
-	time_s = get_timestamp_ms();
-
-	while (bytes_sent < args->size) {
-		int ret, chunk_len;
-
-		if (args->size - bytes_sent < DATA_CHUNK_SIZE) {
-			chunk_len = args->size - bytes_sent;
-		} else {
-			chunk_len = DATA_CHUNK_SIZE;
+		if (args->exit) {
+			fprintf(logfp, "(%s) got exit signal\n", args->name);
+			assert(result != NULL);
+			return result; // Terminates the thread
 		}
-		ret = send(args->s, args->data, chunk_len, 0);
-		if (ret > 0) {
-			bytes_sent += ret;
+
+		assert(args->s >= 0);
+		assert(args->meas == NULL);
+		result = malloc(sizeof(struct measurement));
+		check_alloc(result, "mapper_connection_1");
+		args->meas = result;
+		strncpy(result->th_name, args->name, NAME_LEN);
+
+		fprintf(logfp, "(%s) connection started, have to send %ld bytes to %s\n", args->name, args->reducer_info->size, args->reducer_info->name);
+
+		result->time_start_ms = get_wall_time_ms();
+		time_s = get_timestamp_ms();
+
+		while (bytes_sent < args->reducer_info->size) {
+			int ret, chunk_len;
+
+			if (args->reducer_info->size - bytes_sent < DATA_CHUNK_SIZE) {
+				chunk_len = args->reducer_info->size - bytes_sent;
+			} else {
+				chunk_len = DATA_CHUNK_SIZE;
+			}
+			ret = send(args->s, args->reducer_info->data, chunk_len, 0);
+			if (ret > 0) {
+				bytes_sent += ret;
+			} else {
+				fprintf(logfp, "(%s) send error: %s\n", args->name, strerror(errno));
+			}
 		}
+
+		send(args->s, &end_char, 1, 0);
+
+		time_e = get_timestamp_ms();
+
+		result->time_elapsed = time_e - time_s;
+		result->bytes_moved = bytes_sent + 1;
+		result->thread_time = get_thread_time_ms();
+
+		close(args->s);
+		args->s = -1;
+		fprintf(logfp, "(%s) all data sent, closing connection to %s\n", args->name, args->reducer_info->name);
+
+		*(args->free) = 1;
+		sem_post(args->finish_sem);
 	}
-
-	args->data[0] = 0xFF;
-	send(args->s, args->data, 1, 0);
-
-	time_e = get_timestamp_ms();
-
-	result->time_elapsed = time_e - time_s;
-	result->bytes_moved = bytes_sent + 1;
-	result->thread_time = get_thread_time_ms();
-
-	close(args->s);
-	fprintf(logfp, "(%s) all data sent, thread exiting\n", args->name);
-	sem_post(args->finish_sem);
-	return result;
+	assert(1); // Will never reach
+	return NULL;
 }
 
 void* mapper(void* vargs)
 {
-	int s, ret, i, current_conn_count = 0, remaining, to_start;
+	int s, ret, i, remaining, free_result_idx = 0;
 	struct mapper_args* args = vargs;
-	struct mapper_connection_args** reducers;
+	struct mapper_reducer_info* reducer_list;
 	struct mapper_conn_thread* conn_threads;
-	sem_t th_completion_sem;
 	struct results *results;
+	sem_t th_completion_sem;
+	int* threads_free;
+	char* data;
 
 	fprintf(logfp, "(%s) Mapper thread started\n", args->name);
 
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-	reducers = malloc(args->num_reducers * sizeof(struct mapper_connection_args*));
-	check_alloc(reducers, "mapper_1");
-	for (i = 0; i < args->num_reducers; i++) {
-		int j;
-//		fprintf(logfp, "(%s) Allocating data for reducer %s\n", args->name, args->reducer_names[i]);
-		reducers[i] = malloc(sizeof(struct mapper_connection_args));
-		check_alloc(reducers[i], "mapper_2");
-		reducers[i]->size = args->reducer_sizes[i];
-		reducers[i]->reducer_name = args->reducer_names[i];
-		reducers[i]->finish_sem = &th_completion_sem;
-		for (j = 0; j < DATA_CHUNK_SIZE; j++) {
-			reducers[i]->data[j] = j & 0x7F;
-		}
+	sem_init(&th_completion_sem, 0, args->num_concurrent_conn);
+
+	/* the data the mapper will send to every reducer */
+	data = malloc(DATA_CHUNK_SIZE * sizeof(char));
+	check_alloc(data, "mapper_1");
+	for (i = 0; i < DATA_CHUNK_SIZE; i++) {
+		data[i] = i & 0x7F;
 	}
 
+	/* vector threads use to signal they are free to do more work */
+	threads_free = malloc(args->num_concurrent_conn * sizeof(int));
+	check_alloc(threads_free, "mapper_2");
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		threads_free[i] = 1;
+	}
+
+	/* every reducer that will contact this mapper is in this list */
+	reducer_list = malloc(args->num_reducers * sizeof(struct mapper_reducer_info));
+	check_alloc(reducer_list, "mapper_3");
+	for (i = 0; i < args->num_reducers; i++) {
+		reducer_list[i].data = data;
+		reducer_list[i].size = args->reducer_sizes[i];
+		reducer_list[i].name = args->reducer_names[i];
+	}
+
+	/* each conn thread has a struct here */
 	conn_threads = malloc(args->num_concurrent_conn * sizeof(struct mapper_conn_thread));
 	check_alloc(conn_threads, "mapper_4");
 	for (i = 0; i < args->num_concurrent_conn; i++) {
-		conn_threads[i].free = 1;
-		conn_threads[i].joined = 1;
+		conn_threads[i].free = &(threads_free[i]);
+		conn_threads[i].running = 0;
+		conn_threads[i].exit = 0;
+		conn_threads[i].s = -1;
+		conn_threads[i].finish_sem = &th_completion_sem;
+		snprintf(conn_threads[i].name, NAME_LEN, "%s:th%d", args->name, i);
+		conn_threads[i].meas = NULL;
 	}
 
 	fprintf(logfp, "(%s) Binding to port %d\n", args->name, args->port);
 	s = listen_socket(args->port);
 
-	sem_init(&th_completion_sem, 0, 0);
-
-	to_start = remaining = args->num_reducers;
+	remaining = args->num_reducers;
 
 	results = malloc(sizeof(struct results));
 	check_alloc(results, "mapper_5");
@@ -291,93 +330,120 @@ void* mapper(void* vargs)
 
 	// We are ready to start
 	pthread_barrier_wait(&args->ready);
+	fprintf(logfp, "(%s) Got START signal\n", args->name);
 
 	while (remaining > 0) {
 		struct sockaddr_in peer_addr;
-		int peer_s, found = -1;
+		int peer_s, reducer_idx, thread_idx;
 		char peer_name[NAME_LEN];
 		socklen_t peer_addr_len;
-//		fprintf(logfp, "(%s) Current connection count: %d\n", args->name, current_conn_count);
 
-		if (to_start > 0 && current_conn_count < args->num_concurrent_conn) {
-			peer_addr_len = sizeof(struct sockaddr_in);
-			peer_s = accept(s, (struct sockaddr*)&peer_addr, &peer_addr_len);
-			if (peer_s < 0) {
-				fprintf(logfp, "(%s) accept error: %s\n", args->name, strerror(errno));
-				continue;
-			}
+		sem_wait(&th_completion_sem);
 
-			to_start--;
-			current_conn_count++;
-			ret = recv(peer_s, peer_name, NAME_LEN, 0);
-			if (ret < NAME_LEN) {
-				fprintf(logfp, "(%s) --> Short recv while reading the reducer name\n", args->name);
-				if (ret < 0) {
-					fprintf(logfp, "(%s) recv error: %s\n", args->name, strerror(errno));
-				}
+		// Look for a free thread
+		thread_idx = -1;
+		for (i = 0; i < args->num_concurrent_conn; i++) {
+			if (threads_free[i]) {
+				thread_idx = i;
+				break;
 			}
-			// Look for the data for this reducer
-			for (i = 0; i < args->num_reducers; i++) {
-				if (strncmp(peer_name, reducers[i]->reducer_name, NAME_LEN) == 0) {
-					found = i;
-					break;
-				}
-			}
-			if (found < 0) {
-				fprintf(logfp, "(%s) Got connection from unknown reducer '%s'\n", args->name, peer_name);
-				close(peer_s);
-				continue;
-			}
+		}
+		assert(thread_idx != -1);
 
-			fprintf(logfp, "(%s) Got connection from reducer %s\n", args->name, peer_name);
-			// Look for a free slot
-			for (i = 0; i < args->num_concurrent_conn; i++) {
-				if (conn_threads[i].free) {
-					reducers[found]->s = peer_s;
-					snprintf(reducers[found]->name, NAME_LEN, "%s:%d", args->name, found);
-					conn_threads[i].free = 0;
-					conn_threads[i].joined = 0;
-					pthread_create(&conn_threads[found].th, NULL, mapper_connection, reducers[found]);
-					pthread_setname_np(conn_threads[found].th, reducers[found]->name);
-					fprintf(logfp, "(%s) new thread ID: %lx\n", reducers[found]->name, conn_threads[found].th);
-					break;
-				}
-			}
+		if (!conn_threads[thread_idx].running) {
+			conn_threads[thread_idx].running = 1;
+			sem_init(&conn_threads[i].start_sem, 0, 0);
+			pthread_create(&conn_threads[thread_idx].th, NULL, mapper_connection, &(conn_threads[thread_idx]));
+			pthread_setname_np(conn_threads[thread_idx].th, conn_threads[thread_idx].name);
+			fprintf(logfp, "(%s) new thread ID: %s\n", args->name, conn_threads[thread_idx].name);
 		} else {
-			void* result;
-			fprintf(logfp, "(%s) Waiting for a thread to finish\n", args->name);
-			sem_wait(&th_completion_sem);
-			i = 0;
-			do {
-				result = NULL;
-				while (conn_threads[i].free) { // There is at least one that is not free
-					i = (i + 1) % args->num_concurrent_conn;
-				}
-				if (!conn_threads[i].joined) {
-					ret = pthread_join(conn_threads[i].th, &result);
-					assert(ret == 0);
-					conn_threads[i].joined = 1;
-				}
-			} while (ret != 0);
-			assert(result != NULL);
-			current_conn_count--;
-			remaining--;
-			conn_threads[i].free = 1;
-			i = 0;
-			while (results->meas[i] != NULL) {
-				i++;
+			if (conn_threads[i].meas != NULL) {
+				results->meas[free_result_idx] = conn_threads[i].meas;
+				free_result_idx++;
+				assert(free_result_idx < args->num_reducers);
+				conn_threads[i].meas = NULL;
 			}
-			results->meas[i] = result;
-			fprintf(logfp, "(%s) thread %d (%lx) joined, %d connections remaining\n", args->name, i, conn_threads[i].th, remaining);
+		}
+
+		peer_addr_len = sizeof(struct sockaddr_in);
+		peer_s = accept(s, (struct sockaddr*)&peer_addr, &peer_addr_len);
+		if (peer_s < 0) {
+			fprintf(logfp, "(%s) accept error: %s\n", args->name, strerror(errno));
+			continue;
+		}
+
+		ret = recv(peer_s, peer_name, NAME_LEN, 0);
+		if (ret < NAME_LEN) {
+			fprintf(logfp, "(%s) --> Short recv while reading the reducer name\n", args->name);
+			if (ret < 0) {
+				fprintf(logfp, "(%s) recv error: %s\n", args->name, strerror(errno));
+			}
+		}
+		// Look for the data for this reducer
+		reducer_idx = -1;
+		for (i = 0; i < args->num_reducers; i++) {
+			if (strncmp(peer_name, reducer_list[i].name, NAME_LEN) == 0) {
+				reducer_idx = i;
+				break;
+			}
+		}
+		if (reducer_idx == -1) {
+			fprintf(logfp, "(%s) Got connection from unknown reducer '%s'\n", args->name, peer_name);
+			close(peer_s);
+			continue;
+		}
+
+		fprintf(logfp, "(%s) Got connection from reducer %s\n", args->name, peer_name);
+		remaining--;
+
+		threads_free[thread_idx] = 0;
+		conn_threads[thread_idx].s = peer_s;
+		conn_threads[thread_idx].reducer_info = &(reducer_list[i]);
+		sem_post(&conn_threads[thread_idx].start_sem);
+	}
+
+	fprintf(logfp, "(%s) All reducers connected, waiting for threads to terminate\n", args->name);
+	// Steal all the semaphore depth and then wait all threads to finish
+	while(1) {
+		int free_count;
+		fprintf(logfp, "(%s) waiting on semaphore\n", args->name);
+		sem_wait(&th_completion_sem);
+		free_count = 0;
+		for (i = 0; i < args->num_concurrent_conn; i++) {
+			free_count += threads_free[i];
+		}
+		if (free_count == args->num_concurrent_conn) {
+			break;
+		}
+		fprintf(logfp, "(%s) -> %d threads still running\n", args->name, args->num_concurrent_conn - free_count);
+	}
+	// Signal all threads to exit when ready
+	fprintf(logfp, "(%s) Sending exit signal to all threads\n", args->name);
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		if (conn_threads[i].running) {
+			conn_threads[i].exit = 1;
+			sem_post(&conn_threads[i].start_sem);
 		}
 	}
 
-	sem_destroy(&th_completion_sem);
-	free(conn_threads);
-	for (i = 0; i < args->num_reducers; i++) {
-		free(reducers[i]);
+	// Join all threads
+	for (i = 0; i < args->num_concurrent_conn; i++) {
+		if (conn_threads[i].running) {
+			void* meas;
+			pthread_join(conn_threads[i].th, &meas);
+			fprintf(logfp, "(%s) thread %s joined\n", args->name, conn_threads[i].name);
+			results->meas[free_result_idx] = meas;
+			free_result_idx++;
+			sem_destroy(&conn_threads[i].start_sem);
+		}
 	}
-	free(reducers);
+	assert(free_result_idx == args->num_reducers);
+
+	sem_destroy(&th_completion_sem);
+	free(data);
+	free(conn_threads);
+	free(threads_free);
+	free(reducer_list);
 	fprintf(logfp, "(%s) all done, exiting\n", args->name);
 	free(args->reducer_sizes);
 	for (i = 0; i < args->num_reducers; i++) {
@@ -403,14 +469,14 @@ void new_mapper(pthread_t *node, int id, char* data)
 	args->num_concurrent_conn = atol(aux);
 	aux = strtok(NULL, ",");
 	args->port = atol(aux);
-	fprintf(logfp, "(%s) New mapper on port %d\n", args->name, args->port);
+	fprintf(logfp, "CONF: mapper on port %d\n", args->port);
 	aux = strtok(NULL, ",");
 	args->num_reducers = atol(aux);
 	args->reducer_sizes = malloc(args->num_reducers * sizeof(ssize_t));
 	check_alloc(args->reducer_sizes, "new_mapper_2");
 	args->reducer_names = malloc(args->num_reducers * sizeof(ssize_t));
 	check_alloc(args->reducer_names, "new_mapper_3");
-	fprintf(logfp, "(%s) -> will serve %d reducers\n", args->name, args->num_reducers);
+	fprintf(logfp, "CONF: -> will serve %d reducers\n", args->num_reducers);
 	for (i = 0; i < args->num_reducers; i++) {
 		args->reducer_names[i] = malloc(NAME_LEN * sizeof(char));
 		check_alloc(args->reducer_names[i], "new_mapper_4");
@@ -423,7 +489,7 @@ void new_mapper(pthread_t *node, int id, char* data)
 
 	pthread_create(node, NULL, mapper, args);
 	pthread_setname_np(*node, args->name);
-	fprintf(logfp, "(%s) new thread ID: %lx\n", args->name, *node);
+	fprintf(logfp, "(main) new thread ID: %s\n", args->name);
 
 	pthread_barrier_wait(&args->ready);
 	pthread_barrier_destroy(&args->ready); // Will not be used again
@@ -553,8 +619,8 @@ void* reducer(void* vargs)
 			pthread_create(&conns[i].th, NULL, reducer_connection, &conns[i]);
 			pthread_setname_np(conns[i].th, args->name);
 			fprintf(logfp, "(%s) new thread ID: th%d\n", args->name, conns[i].id);
+			remaining++;
 		}
-		remaining++;
 	}
 
 	for (i = 0; i < args->num_concurrent_conn; i++) {
@@ -579,6 +645,7 @@ void* reducer(void* vargs)
 		}
 	}
 
+	assert(remaining == 0);
 	for (i = 0; i < args->num_concurrent_conn; i++) {
 		free(conns[i].mappers);
 	}
@@ -603,7 +670,7 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 
 	/* use name from strtok */
 	strncpy(reducer_args->name, aux, NAME_LEN);
-	fprintf(logfp, "(%s) New reducer\n", reducer_args->name);
+	fprintf(logfp, "CONF: reducer\n");
 
 	/* concurrent connections */
 	aux = strtok(NULL, ",");
@@ -627,7 +694,7 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 		aux = strtok(NULL, ",");
 		ret = inet_pton(AF_INET, aux, &reducer_args->addresses[i].addr);
 		if (!ret) {
-			fprintf(logfp, "(%s) -> failed to parse IP address '%s'\n", reducer_args->name, aux);
+			fprintf(logfp, "CONF: -> failed to parse IP address '%s' for reducer %s\n", aux, reducer_args->name);
 			continue;
 		}
 	}
@@ -635,7 +702,7 @@ void new_reducer(pthread_t *node, int id, char* data, pthread_barrier_t* barr)
 
 	pthread_create(node, NULL, reducer, reducer_args);
 	pthread_setname_np(*node, reducer_args->name);
-	fprintf(logfp, "(%s) new thread ID: %lx\n", reducer_args->name, *node);
+	fprintf(logfp, "(main) new thread ID: %s\n", reducer_args->name);
 
 	pthread_barrier_wait(&reducer_args->ready);
 	pthread_barrier_destroy(&reducer_args->ready); // Will not be used again
@@ -666,11 +733,11 @@ void wait_for_results(int num_nodes, pthread_t* nodes)
 	for (i = 0; i < num_nodes; i++) {
 		char thname[10];
 		pthread_getname_np(nodes[i], thname, 10);
-		fprintf(logfp, "Waiting for thread %s (%lx) to join...\n", thname, nodes[i]);
+		fprintf(logfp, "(main) Waiting for thread %s (%lx) to join...\n", thname, nodes[i]);
 		pthread_join(nodes[i], &retval);
 		results = retval;
 		send_results(results);
-		fprintf(logfp, "Thread %s (%lx) joined\n", results->th_name, nodes[i]);
+		fprintf(logfp, "(main) Thread %s joined\n", results->th_name);
 		for (j = 0; j < results->count; j++) {
 			free(results->meas[j]);
 		}
