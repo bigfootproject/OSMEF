@@ -354,7 +354,6 @@ void* mapper(void* vargs)
 			conn_threads[thread_idx].running = 1;
 			sem_init(&conn_threads[i].start_sem, 0, 0);
 			pthread_create(&conn_threads[thread_idx].th, NULL, mapper_connection, &(conn_threads[thread_idx]));
-			pthread_setname_np(conn_threads[thread_idx].th, conn_threads[thread_idx].name);
 			fprintf(logfp, "(%s) new thread ID: %s\n", args->name, conn_threads[thread_idx].name);
 		} else {
 			if (conn_threads[i].meas != NULL) {
@@ -617,7 +616,6 @@ void* reducer(void* vargs)
 	for (i = 0; i < args->num_concurrent_conn; i++) {
 		if (conns[i].num_mappers > 0) {
 			pthread_create(&conns[i].th, NULL, reducer_connection, &conns[i]);
-			pthread_setname_np(conns[i].th, args->name);
 			fprintf(logfp, "(%s) new thread ID: th%d\n", args->name, conns[i].id);
 			remaining++;
 		}
@@ -731,9 +729,9 @@ void wait_for_results(int num_nodes, pthread_t* nodes)
 	struct results* results;
 
 	for (i = 0; i < num_nodes; i++) {
-		char thname[10];
-		pthread_getname_np(nodes[i], thname, 10);
-		fprintf(logfp, "(main) Waiting for thread %s (%lx) to join...\n", thname, nodes[i]);
+		char thname[16];
+		pthread_getname_np(nodes[i], thname, 16);
+		fprintf(logfp, "(main) Waiting for thread %s to join...\n", thname);
 		pthread_join(nodes[i], &retval);
 		results = retval;
 		send_results(results);
