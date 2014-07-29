@@ -1,0 +1,457 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+CONF: mapper on port 23330
+CONF: -> will serve 41 reducers
+(main) new thread ID: vm35:m0
+(vm35:m0) Mapper thread started
+(vm35:m0) Binding to port 23330
+(vm35:m0) Got START signal
+(vm35:m0) new thread ID: vm35:m0:th0
+(vm35:m0:th0) waiting for something to do...
+CONF: reducer
+(main) new thread ID: vm35:r0
+(vm35:r0) Reducer thread started
+(vm35:r0) waiting for START message
+(main) Waiting for thread vm35:m0 to join...
+(vm35:r0) got START message
+(vm35:r0) new thread ID: th0
+(vm35:r0) new thread ID: th1
+(vm35:r0) new thread ID: th2
+(vm35:r0) new thread ID: th3
+(vm35:r0) new thread ID: th4
+(vm35:r0:th2:0) Connection established with mapper vm3:m0
+(vm35:r0:th3:0) Connection established with mapper vm4:m0
+(vm35:r0:th1:0) Connection established with mapper vm2:m0
+(vm35:r0:th0:0) Connection established with mapper vm1:m0
+(vm35:r0:th4:0) Connection established with mapper vm5:m0
+(vm35:m0) Got connection from reducer vm40:r0
+(vm35:m0) new thread ID: vm35:m0:th1
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm40:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0:th0) all data sent, closing connection to vm40:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:r0:th0:0) Connection to vm1:m0 finished, received 654081873 bytes
+(vm35:r0:th0:1) Connection established with mapper vm6:m0
+(vm35:r0:th0:1) Connection to vm6:m0 finished, received 654081874 bytes
+(vm35:r0:th0:2) Connection established with mapper vm11:m0
+(vm35:r0:th0:2) Connection to vm11:m0 finished, received 654081875 bytes
+(vm35:r0:th0:3) Connection established with mapper vm16:m0
+(vm35:r0:th3:0) Connection to vm4:m0 finished, received 654081873 bytes
+(vm35:r0:th3:1) Connection established with mapper vm9:m0
+(vm35:r0:th2:0) Connection to vm3:m0 finished, received 654081873 bytes
+(vm35:r0:th2:1) Connection established with mapper vm8:m0
+(vm35:r0:th1:0) Connection to vm2:m0 finished, received 654081873 bytes
+(vm35:r0:th1:1) Connection established with mapper vm7:m0
+(vm35:r0:th0:3) Connection to vm16:m0 finished, received 1308163748 bytes
+(vm35:r0:th0:4) Connection established with mapper vm21:m0
+(vm35:r0:th0:4) Connection to vm21:m0 finished, received 1308163749 bytes
+(vm35:r0:th0:5) Connection established with mapper vm26:m0
+(vm35:r0:th4:0) Connection to vm5:m0 finished, received 654081873 bytes
+(vm35:r0:th4:1) Connection established with mapper vm10:m0
+(vm35:r0:th4:1) Connection to vm10:m0 finished, received 654081874 bytes
+(vm35:r0:th4:2) Connection established with mapper vm15:m0
+(vm35:r0:th4:2) Connection to vm15:m0 finished, received 654081875 bytes
+(vm35:r0:th4:3) Connection established with mapper vm20:m0
+(vm35:m0) Got connection from reducer vm28:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm28:r0
+(vm35:r0:th0:5) Connection to vm26:m0 finished, received 1962245622 bytes
+(vm35:r0:th0:6) Connection established with mapper vm31:m0
+(vm35:r0:th0:6) Connection to vm31:m0 finished, received 1962245623 bytes
+(vm35:r0:th0:7) Connection established with mapper vm36:m0
+(vm35:r0:th0:7) Connection to vm36:m0 finished, received 1962245624 bytes
+(vm35:r0:th0:8) Connection established with mapper vm41:m0
+(vm35:r0:th0:8) Connection to vm41:m0 finished, received 1962245625 bytes
+(vm35:r0:th0) Got data from all mappers, this reducer connection has finished.
+(vm35:r0) thread th0 joined, 4 connection threads remaining
+(vm35:m0:th1) all data sent, closing connection to vm28:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:r0:th4:3) Connection to vm20:m0 finished, received 1308163748 bytes
+(vm35:r0:th4:4) Connection established with mapper vm25:m0
+(vm35:m0) Got connection from reducer vm39:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm39:r0
+(vm35:m0:th0) all data sent, closing connection to vm39:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm36:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm36:r0
+(vm35:m0:th1) all data sent, closing connection to vm36:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm12:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm12:r0
+(vm35:m0:th0) all data sent, closing connection to vm12:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm31:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm31:r0
+(vm35:m0:th1) all data sent, closing connection to vm31:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm26:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm26:r0
+(vm35:m0:th0) all data sent, closing connection to vm26:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:r0:th4:4) Connection to vm25:m0 finished, received 1962245621 bytes
+(vm35:r0:th4:5) Connection established with mapper vm30:m0
+(vm35:r0:th4:5) Connection to vm30:m0 finished, received 1962245622 bytes
+(vm35:r0:th4:6) Connection established with mapper vm35:m0
+(vm35:m0) Got connection from reducer vm35:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm35:r0
+(vm35:m0:th1) all data sent, closing connection to vm35:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:r0:th4:6) Connection to vm35:m0 finished, received 1962245623 bytes
+(vm35:r0:th4:7) Connection established with mapper vm40:m0
+(vm35:r0:th4:7) Connection to vm40:m0 finished, received 1962245624 bytes
+(vm35:r0:th4) Got data from all mappers, this reducer connection has finished.
+(vm35:m0) Got connection from reducer vm14:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm14:r0
+(vm35:m0:th0) all data sent, closing connection to vm14:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm21:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm21:r0
+(vm35:m0:th1) all data sent, closing connection to vm21:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:r0:th3:1) Connection to vm9:m0 finished, received 1308163746 bytes
+(vm35:r0:th3:2) Connection established with mapper vm14:m0
+(vm35:r0:th3:2) Connection to vm14:m0 finished, received 1308163747 bytes
+(vm35:r0:th3:3) Connection established with mapper vm19:m0
+(vm35:r0:th3:3) Connection to vm19:m0 finished, received 1308163748 bytes
+(vm35:r0:th3:4) Connection established with mapper vm24:m0
+(vm35:r0:th3:4) Connection to vm24:m0 finished, received 1308163749 bytes
+(vm35:r0:th3:5) Connection established with mapper vm29:m0
+(vm35:r0:th3:5) Connection to vm29:m0 finished, received 1308163750 bytes
+(vm35:r0:th3:6) Connection established with mapper vm34:m0
+(vm35:r0:th3:6) Connection to vm34:m0 finished, received 1308163751 bytes
+(vm35:r0:th3:7) Connection established with mapper vm39:m0
+(vm35:r0:th3:7) Connection to vm39:m0 finished, received 1308163752 bytes
+(vm35:r0:th3) Got data from all mappers, this reducer connection has finished.
+(vm35:m0) Got connection from reducer vm41:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm41:r0
+(vm35:m0:th0) all data sent, closing connection to vm41:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm4:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm4:r0
+(vm35:m0:th1) all data sent, closing connection to vm4:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm30:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm30:r0
+(vm35:m0:th0) all data sent, closing connection to vm30:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:r0:th2:1) Connection to vm8:m0 finished, received 1308163746 bytes
+(vm35:r0:th2:2) Connection established with mapper vm13:m0
+(vm35:r0:th2:2) Connection to vm13:m0 finished, received 1308163747 bytes
+(vm35:r0:th2:3) Connection established with mapper vm18:m0
+(vm35:r0:th2:3) Connection to vm18:m0 finished, received 1308163748 bytes
+(vm35:r0:th2:4) Connection established with mapper vm23:m0
+(vm35:r0:th2:4) Connection to vm23:m0 finished, received 1308163749 bytes
+(vm35:r0:th2:5) Connection established with mapper vm28:m0
+(vm35:r0:th2:5) Connection to vm28:m0 finished, received 1308163750 bytes
+(vm35:r0:th2:6) Connection established with mapper vm33:m0
+(vm35:r0:th2:6) Connection to vm33:m0 finished, received 1308163751 bytes
+(vm35:r0:th2:7) Connection established with mapper vm38:m0
+(vm35:r0:th2:7) Connection to vm38:m0 finished, received 1308163752 bytes
+(vm35:r0:th2) Got data from all mappers, this reducer connection has finished.
+(vm35:m0) Got connection from reducer vm27:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm27:r0
+(vm35:m0:th1) all data sent, closing connection to vm27:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm37:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm37:r0
+(vm35:m0:th0) all data sent, closing connection to vm37:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm38:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm38:r0
+(vm35:m0:th1) all data sent, closing connection to vm38:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm29:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm29:r0
+(vm35:m0:th0) all data sent, closing connection to vm29:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm24:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm24:r0
+(vm35:m0:th1) all data sent, closing connection to vm24:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm22:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm22:r0
+(vm35:m0:th0) all data sent, closing connection to vm22:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm17:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm17:r0
+(vm35:m0:th1) all data sent, closing connection to vm17:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm32:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm32:r0
+(vm35:m0:th0) all data sent, closing connection to vm32:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm10:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm10:r0
+(vm35:m0:th1) all data sent, closing connection to vm10:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm23:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm23:r0
+(vm35:m0:th0) all data sent, closing connection to vm23:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm34:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm34:r0
+(vm35:m0:th1) all data sent, closing connection to vm34:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm6:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm6:r0
+(vm35:m0:th0) all data sent, closing connection to vm6:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm2:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm2:r0
+(vm35:m0:th1) all data sent, closing connection to vm2:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm19:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm19:r0
+(vm35:m0:th0) all data sent, closing connection to vm19:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm13:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm13:r0
+(vm35:m0:th1) all data sent, closing connection to vm13:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm20:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm20:r0
+(vm35:m0:th0) all data sent, closing connection to vm20:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm16:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm16:r0
+(vm35:m0:th1) all data sent, closing connection to vm16:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm3:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm3:r0
+(vm35:m0:th0) all data sent, closing connection to vm3:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm18:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm18:r0
+(vm35:m0:th1) all data sent, closing connection to vm18:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm8:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm8:r0
+(vm35:m0:th0) all data sent, closing connection to vm8:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm11:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm11:r0
+(vm35:m0:th1) all data sent, closing connection to vm11:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm25:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm25:r0
+(vm35:m0:th0) all data sent, closing connection to vm25:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm5:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm5:r0
+(vm35:m0:th1) all data sent, closing connection to vm5:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm1:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm1:r0
+(vm35:m0:th0) all data sent, closing connection to vm1:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm15:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm15:r0
+(vm35:m0:th1) all data sent, closing connection to vm15:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:m0) Got connection from reducer vm33:r0
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm33:r0
+(vm35:m0:th0) all data sent, closing connection to vm33:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Got connection from reducer vm9:r0
+(vm35:m0:th1) connection started, have to send 654081872 bytes to vm9:r0
+(vm35:m0:th1) all data sent, closing connection to vm9:r0
+(vm35:m0:th1) waiting for something to do...
+(vm35:r0:th1:1) Connection to vm7:m0 finished, received 1308163746 bytes
+(vm35:r0:th1:2) Connection established with mapper vm12:m0
+(vm35:r0:th1:2) Connection to vm12:m0 finished, received 1308163747 bytes
+(vm35:r0:th1:3) Connection established with mapper vm17:m0
+(vm35:r0:th1:3) Connection to vm17:m0 finished, received 1308163748 bytes
+(vm35:r0:th1:4) Connection established with mapper vm22:m0
+(vm35:r0:th1:4) Connection to vm22:m0 finished, received 1308163749 bytes
+(vm35:r0:th1:5) Connection established with mapper vm27:m0
+(vm35:r0:th1:5) Connection to vm27:m0 finished, received 1308163750 bytes
+(vm35:r0:th1:6) Connection established with mapper vm32:m0
+(vm35:r0:th1:6) Connection to vm32:m0 finished, received 1308163751 bytes
+(vm35:r0:th1:7) Connection established with mapper vm37:m0
+(vm35:r0:th1:7) Connection to vm37:m0 finished, received 1308163752 bytes
+(vm35:r0:th1) Got data from all mappers, this reducer connection has finished.
+(vm35:r0) thread th1 joined, 3 connection threads remaining
+(vm35:r0) thread th2 joined, 2 connection threads remaining
+(vm35:r0) thread th3 joined, 1 connection threads remaining
+(vm35:r0) thread th4 joined, 0 connection threads remaining
+(vm35:r0) all done, exiting
+(vm35:m0) Got connection from reducer vm7:r0
+(vm35:m0) All reducers connected, waiting for threads to terminate
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0) -> 1 threads still running
+(vm35:m0) waiting on semaphore
+(vm35:m0:th0) connection started, have to send 654081872 bytes to vm7:r0
+(vm35:m0:th0) all data sent, closing connection to vm7:r0
+(vm35:m0:th0) waiting for something to do...
+(vm35:m0) Sending exit signal to all threads
+(vm35:m0:th1) got exit signal
+(vm35:m0:th0) got exit signal
+(vm35:m0) thread vm35:m0:th0 joined
+(vm35:m0) thread vm35:m0:th1 joined
+(vm35:m0) all done, exiting
+*RES* start node vm35:m0
+*RES* vm35:m0:th0,1406620797243,1003,714,654081873
+*RES* vm35:m0:th1,1406620805460,8133,899,654081873
+*RES* vm35:m0:th0,1406620814929,0,715,654081873
+*RES* vm35:m0:th1,1406620817369,0,899,654081873
+*RES* vm35:m0:th0,1406620817542,0,715,654081873
+*RES* vm35:m0:th1,1406620817914,1,899,654081873
+*RES* vm35:m0:th0,1406620819047,0,715,654081873
+*RES* vm35:m0:th1,1406620819433,0,899,654081873
+*RES* vm35:m0:th0,1406620820522,0,715,654081873
+*RES* vm35:m0:th1,1406620820790,0,899,654081873
+*RES* vm35:m0:th0,1406620821140,0,715,654081873
+*RES* vm35:m0:th1,1406620821878,0,900,654081873
+*RES* vm35:m0:th0,1406620822384,0,715,654081873
+*RES* vm35:m0:th1,1406620824285,0,900,654081873
+*RES* vm35:m0:th0,1406620824408,0,715,654081873
+*RES* vm35:m0:th1,1406620824442,0,900,654081873
+*RES* vm35:m0:th0,1406620824490,0,715,654081873
+*RES* vm35:m0:th1,1406620824617,0,900,654081873
+*RES* vm35:m0:th0,1406620824698,0,715,654081873
+*RES* vm35:m0:th1,1406620824719,0,900,654081873
+*RES* vm35:m0:th0,1406620824817,0,716,654081873
+*RES* vm35:m0:th1,1406620824826,0,901,654081873
+*RES* vm35:m0:th0,1406620824882,0,716,654081873
+*RES* vm35:m0:th1,1406620824984,0,901,654081873
+*RES* vm35:m0:th0,1406620825070,0,716,654081873
+*RES* vm35:m0:th1,1406620825328,0,901,654081873
+*RES* vm35:m0:th0,1406620825329,0,716,654081873
+*RES* vm35:m0:th1,1406620825395,0,901,654081873
+*RES* vm35:m0:th0,1406620825432,1,716,654081873
+*RES* vm35:m0:th1,1406620825517,0,901,654081873
+*RES* vm35:m0:th0,1406620825558,0,716,654081873
+*RES* vm35:m0:th1,1406620825566,0,901,654081873
+*RES* vm35:m0:th0,1406620825940,0,716,654081873
+*RES* vm35:m0:th1,1406620826025,0,901,654081873
+*RES* vm35:m0:th0,1406620826255,0,717,654081873
+*RES* vm35:m0:th1,1406620826448,0,902,654081873
+*RES* vm35:m0:th0,1406620826633,0,717,654081873
+*RES* vm35:m0:th1,1406620826749,1,902,654081873
+*RES* vm35:m0:th0,1406620826759,0,717,654081873
+*RES* vm35:m0:th0,1406620835467,0,717,654081873
+*RES* vm35:m0:th1,1406620826922,1,902,654081873
+*RES* end node vm35:m0
+(main) Thread vm35:m0 joined
+(main) Waiting for thread vm35:m0 to join...
+*RES* start node vm35:r0
+*RES* vm35:r0:th0:0,1406620774664,24784,685,654081873
+*RES* vm35:r0:th0:1,1406620799449,16,685,654081874
+*RES* vm35:r0:th0:2,1406620799465,4,686,654081875
+*RES* vm35:r0:th0:3,1406620799469,5105,1445,1308163748
+*RES* vm35:r0:th0:4,1406620804574,11,1445,1308163749
+*RES* vm35:r0:th0:5,1406620804585,8236,2331,1962245622
+*RES* vm35:r0:th0:6,1406620812822,28,2332,1962245623
+*RES* vm35:r0:th0:7,1406620812850,15,2332,1962245624
+*RES* vm35:r0:th0:8,1406620812865,30,2333,1962245625
+*RES* vm35:r0:th1:0,1406620774664,28637,742,654081873
+*RES* vm35:r0:th1:1,1406620803301,28919,1566,1308163746
+*RES* vm35:r0:th1:2,1406620832220,1,1566,1308163747
+*RES* vm35:r0:th1:3,1406620832221,1,1566,1308163748
+*RES* vm35:r0:th1:4,1406620832222,0,1566,1308163749
+*RES* vm35:r0:th1:5,1406620832222,1,1566,1308163750
+*RES* vm35:r0:th1:6,1406620832223,1,1567,1308163751
+*RES* vm35:r0:th1:7,1406620832224,0,1567,1308163752
+*RES* vm35:r0:th2:0,1406620774664,27811,759,654081873
+*RES* vm35:r0:th2:1,1406620802476,21770,1697,1308163746
+*RES* vm35:r0:th2:2,1406620824246,2,1697,1308163747
+*RES* vm35:r0:th2:3,1406620824248,1,1697,1308163748
+*RES* vm35:r0:th2:4,1406620824250,1,1697,1308163749
+*RES* vm35:r0:th2:5,1406620824251,1,1698,1308163750
+*RES* vm35:r0:th2:6,1406620824252,1,1698,1308163751
+*RES* vm35:r0:th2:7,1406620824253,4,1698,1308163752
+*RES* vm35:r0:th3:0,1406620774664,25426,751,654081873
+*RES* vm35:r0:th3:1,1406620800091,20826,1735,1308163746
+*RES* vm35:r0:th3:2,1406620820917,8,1736,1308163747
+*RES* vm35:r0:th3:3,1406620820925,6,1737,1308163748
+*RES* vm35:r0:th3:4,1406620820931,5,1737,1308163749
+*RES* vm35:r0:th3:5,1406620820936,19,1738,1308163750
+*RES* vm35:r0:th3:6,1406620820955,10,1738,1308163751
+*RES* vm35:r0:th3:7,1406620820966,11,1738,1308163752
+*RES* vm35:r0:th4:0,1406620774664,30214,823,654081873
+*RES* vm35:r0:th4:1,1406620804878,27,823,654081874
+*RES* vm35:r0:th4:2,1406620804905,14,824,654081875
+*RES* vm35:r0:th4:3,1406620804920,8793,1791,1308163748
+*RES* vm35:r0:th4:4,1406620813713,5669,2585,1962245621
+*RES* vm35:r0:th4:5,1406620819382,51,2585,1962245622
+*RES* vm35:r0:th4:6,1406620819433,0,2585,1962245623
+*RES* vm35:r0:th4:7,1406620819433,13,2586,1962245624
+*RES* end node vm35:r0
+(main) Thread vm35:r0 joined
+Worker terminating correctly

@@ -1,0 +1,31 @@
+OSMeF worker starting
+Enabling core dumping
+Listening for command connection
+(vm34:m0) New mapper on port 23330
+(vm34:m0) -> will serve 41 reducers
+(vm34:m0) Mapper thread started
+(vm34:m0) Binding to port 23330
+(vm34:r0) New reducer
+(vm34:r0) Reducer thread started
+(vm34:r0) waiting for START message
+(vm34:r0) got START message
+(vm34:r0) Starting new connection thread
+(vm34:r0) Starting new connection thread
+(vm34:r0) Starting new connection thread
+(vm34:r0) Starting new connection thread
+(vm34:r0) Starting new connection thread
+(vm34:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm34:r0:4) Connection established with vm5:m0
+(vm34:r0:3) Connection established with vm4:m0
+(vm34:r0:2) Connection established with vm3:m0
+(vm34:r0:0) Connection established with vm1:m0
+(vm34:r0:1) Connection established with vm2:m0
+(vm34:r0:1) Connection to vm2:m0 finished, received 654081873 bytes
+(vm34:r0:0) Connection to vm1:m0 finished, received 654081873 bytes
+(vm34:r0) thread 0 joined, 40 connections remaining
+(vm34:r0) Starting new connection thread
+(vm34:r0) Maximum number of connections reached (5), waiting for a thread to finish
+(vm34:r0:0) Connection established with vm6:m0
+(vm34:r0:3) Connection to vm4:m0 finished, received 654081873 bytes
+(vm34:r0:2) Connection to vm3:m0 finished, received 654081873 bytes
+(vm34:r0:4) Connection to vm5:m0 finished, received 654081873 bytes
