@@ -1,7 +1,6 @@
 #!/bin/bash
 
 PYTHONPATH=../..
-for i in `seq 10`; do ../../osmef.py -s local41 -d; done
 for i in `seq 10`; do ../../osmef.py -s local42 -d; done
 for i in `seq 10`; do ../../osmef.py -s local43 -d; done
 for i in `seq 10`; do ../../osmef.py -s local44 -d; done
