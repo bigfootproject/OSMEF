@@ -34,7 +34,6 @@ def find_concurrent_values(data):
 def get_one_value_many_measurements(measurements, key):
     out = []
     for m in measurements:
-        print(m)
         try:
             out.append(dotkey(measurements[m], key))
         except KeyError:
