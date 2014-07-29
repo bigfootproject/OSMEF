@@ -43,7 +43,7 @@ print(btc_data)
 lines.append(ax.plot(xpoints, btc_data, "o-", markersize=MS))
 ax.errorbar(xpoints, btc_data, yerr=err_data, linestyle="None", marker="None")
 
-xpoints = range(2, 40)
+xpoints = range(2, 41)
 btc_data = []
 err_data = []
 for c in xpoints:
