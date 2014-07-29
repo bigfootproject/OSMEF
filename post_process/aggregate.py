@@ -34,6 +34,7 @@ def find_concurrent_values(data):
 def get_one_value_many_measurements(measurements, key):
     out = []
     for m in measurements:
+        print(m)
         try:
             out.append(dotkey(measurements[m], key))
         except KeyError:
@@ -99,7 +100,10 @@ def calc_bw(sizes_bit, times_ns, fun_pre=lambda x: x):
     bw = []
     assert(len(sizes_bit) == len(times_ns))
     for i in range(len(sizes_bit)):
-        bw.append((fun_pre(sizes_bit[i]) * 8) / (fun_pre(times_ns[i]) / 1000.0))
+        t = fun_pre(times_ns[i])
+        if t == 0:
+            t = 0.001
+        bw.append((fun_pre(sizes_bit[i]) * 8) / (t / 1000.0))
     out = {}
     out["avg"] = numpy.average(bw)
     out["std"] = numpy.std(bw)
