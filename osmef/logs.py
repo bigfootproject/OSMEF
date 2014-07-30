@@ -34,10 +34,11 @@ def parse_one_log(log):
         l = l.split(",")
         meas = {}
         meas["name"] = l[0]
-        meas["wall_time_start"] = l[1]
-        meas["time_elapsed"] = l[2]
-        meas["cpu_time"] = l[3]
-        meas["bytes"] = l[4]
+        meas["peer_name"] = l[1]
+        meas["wall_time_start"] = l[2]
+        meas["time_elapsed"] = l[3]
+        meas["cpu_time"] = l[4]
+        meas["bytes"] = l[5]
         node.append(meas)
     return ret
 

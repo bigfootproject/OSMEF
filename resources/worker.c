@@ -100,6 +100,7 @@ struct reducer_conn_thread {
 struct measurement {
 	int empty;
 	char th_name[NAME_LEN];
+	char dest_name[NAME_LEN];
 	long long time_start_ms;
 	unsigned int time_elapsed;
 	unsigned int thread_time;
@@ -221,6 +222,7 @@ void* mapper_connection(void* vargs)
 		check_alloc(result, "mapper_connection_1");
 		args->meas = result;
 		strncpy(result->th_name, args->name, NAME_LEN);
+		strncpy(result->dest_name, args->reducer_info->name, NAME_LEN);
 
 		fprintf(logfp, "(%s) connection started, have to send %ld bytes to %s\n", args->name, args->reducer_info->size, args->reducer_info->name);
 
@@ -520,6 +522,7 @@ void* reducer_connection(void* varg)
 		// This connection name
 		snprintf(conn_name, NAME_LEN, "%s:%d", my_name, i);
 		strncpy(results[i]->th_name, conn_name, NAME_LEN);
+		strncpy(results[i]->dest_name, arg->mappers[i].mapper_name, NAME_LEN);
 		// Begin measurements
 		results[i]->time_start_ms = get_wall_time_ms();
 		time_s = get_timestamp_ms();
@@ -533,9 +536,15 @@ void* reducer_connection(void* varg)
 			fprintf(logfp, "(%s) Connection established with mapper %s\n", conn_name, arg->mappers[i].mapper_name);
 		}
 		// Send reducer name and receive the data, looking for the end character
-		send(s, arg->reducer_name, NAME_LEN, 0);
+		ret = send(s, arg->reducer_name, NAME_LEN, 0);
+		if (ret) {
+			fprintf(logfp, "(%s) -> error sending name: %s\n", conn_name, strerror(errno)); // not threadsafe
+		}
 		do {
 			ret = recv(s, buf, DATA_CHUNK_SIZE, 0);
+			if (ret) {
+				fprintf(logfp, "(%s) -> error in recv: %s\n", conn_name, strerror(errno)); // not threadsafe
+			}
 			data_recv_size += ret;
 			end_character = memchr(buf, 0xFF, ret);
 		} while (end_character == NULL);
@@ -712,8 +721,9 @@ void send_results(struct results* results)
 
 	fprintf(logfp, RESULT_PFX "start node %s\n", results->th_name);
 	for (i = 0; i < results->count; i++) {
-		fprintf(logfp, RESULT_PFX "%s,%lld,%d,%d,%ld\n",
+		fprintf(logfp, RESULT_PFX "%s,%s,%lld,%d,%d,%ld\n",
 				results->meas[i]->th_name,
+				results->meas[i]->dest_name,
 				results->meas[i]->time_start_ms,
 				results->meas[i]->time_elapsed,
 				results->meas[i]->thread_time,
