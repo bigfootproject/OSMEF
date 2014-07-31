@@ -98,15 +98,19 @@ def calc(values, fun_pre=lambda x: x, fun_after=lambda x: x):
 def calc_bw(sizes_bit, times_ns, fun_pre=lambda x: x):
     bw = []
     assert(len(sizes_bit) == len(times_ns))
+    skip_count = 0
     for i in range(len(sizes_bit)):
         t = fun_pre(times_ns[i])
         if t == 0:
-            t = 0.001
+            skip_count += 1
+            continue
         bw.append((fun_pre(sizes_bit[i]) * 8) / (t / 1000.0))
     out = {}
     out["avg"] = numpy.average(bw)
     out["std"] = numpy.std(bw)
     out["count"] = len(bw)
+    if skip_count > 0:
+        print("Skipped %d/%d entries with 0 time" % (skip_count, len(times_ns)))
     return out
 
 

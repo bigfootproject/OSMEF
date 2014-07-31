@@ -2,13 +2,15 @@
 
 import json
 import sys
+import os
 
 summary = {}
 for f in sys.argv[1:]:
     data = json.load(open(f, "r"))
-    summary[data.keys()[0]] = {}
-    summary[data.keys()[0]]["thr"] = data[data.keys()[0]]["aggr"]["total_throughput_bit_sec"]["thr"]
-    summary[data.keys()[0]]["std"] = data[data.keys()[0]]["aggr"]["total_throughput_bit_sec"]["std"]
+    scen_name = os.path.split(f)[-1][:-len("_summary.json")]
+    summary[scen_name] = {}
+    summary[scen_name]["thr"] = data[scen_name]["aggr"]["total_throughput_bit_sec"]["thr"]
+    summary[scen_name]["std"] = data[scen_name]["aggr"]["total_throughput_bit_sec"]["std"]
 
 print("Results")
 
