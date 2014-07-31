@@ -1,42 +1,38 @@
 #!/usr/bin/python
 
 import sys
-from configparser import ConfigParser
 import os
 import json
 
-scenario_file = sys.argv[1]
+import utils
 
-scen = ConfigParser()
-scen.read_file(open(scenario_file))
-print("Checking results against scenario %s" % scen.get("description", "name"))
+try:
+    scenario_name = sys.argv[1]
+    exp_name = sys.argv[2]
+except IndexError:
+    print("Usage: sanity_checks <scenario> <experiment>")
+    sys.exit(1)
 
-num_vms = int(scen.get("description", "num_vms"))
+print("Checking results against scenario %s" % utils.scen_name(scenario_name))
 
-experiments = []
-for d in os.listdir("."):
-    if not os.path.isdir(d):
-        continue
-    if scen.get("description", "name") + "-" not in d:
-        continue
-    experiments.append(d)
+num_vms = utils.scen_num_vms(scenario_name)
 
+experiments = utils.load_experiments(scenario_name, exp_name)
 print("Found %d experiments for this scenario" % len(experiments))
 
 all_good = True
 
-shuffle_size = int(scen.get("description", "total_shuffle_size")) * 1024 * 1024 * 1024
-for d in experiments:
+shuffle_size = utils.scen_shuffle_size(scenario_name)
+for data in experiments:
     total_map_count = 0
     total_red_count = 0
 
-    data = json.load(open(os.path.join(d, "summary.json")))
     if (len(data) != num_vms):
         print("(%s) Expected %d VMs, found %d" % (d, num_vms, len(data)))
         all_good = False
     for i in range(num_vms):
         vm = "vm%d" % (i + 1)
-        map_cnt = int(scen.get(vm, "num_mappers"))
+        map_cnt = utils.scen_num_mappers(scenario_name, vm)
         total_map_count += map_cnt
         for m in range(map_cnt):
             mapn = "%s:m%d" % (vm, m)
@@ -45,7 +41,7 @@ for d in experiments:
             except KeyError:
                 all_good = False
                 print("(%s) Expected mapper %s, not found" % (d, mapn))
-        red_cnt = int(scen.get(vm, "num_reducers"))
+        red_cnt = utils.scen_num_reducers(scenario_name, vm)
         total_red_count += red_cnt
         for r in range(red_cnt):
             redn = "%s:r%d" % (vm, r)
