@@ -201,7 +201,7 @@ void send_done(int s)
 void* mapper_connection(void* vargs)
 {
 	struct mapper_conn_thread* args = vargs;
-	ssize_t bytes_sent = 0;
+	ssize_t bytes_sent;
 	struct measurement* result = NULL;
 	long long time_s, time_e;
 	char end_char = 0xFF;
@@ -229,6 +229,7 @@ void* mapper_connection(void* vargs)
 		result->time_start_ms = get_wall_time_ms();
 		time_s = get_timestamp_ms();
 
+		bytes_sent = 0;
 		while (bytes_sent < args->reducer_info->size) {
 			int ret, chunk_len;
 
