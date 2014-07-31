@@ -1,12 +1,27 @@
 #!/usr/bin/python
 
 import json
+import os
 import re
 import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
+
+import utils
+
+def getindex(k):
+    m = re.match(r"vm([0-9]+):[mr]([0-9]+)", k)
+    return int(m.group(1)) + int(m.group(2)) - 1
+
+try:
+    KEY = sys.argv[1]
+    SCEN = sys.argv[2]
+    EXP = sys.argv[3]
+except IndexError:
+    print("Usage: <cpu_time|bytes|time_elapsed> <scenario> <experiment>")
+    sys.exit(1)
 
 #KEY = "cpu_time"
 #KEY = "bytes"
@@ -15,34 +30,35 @@ POV = "r"  # point of view: mapper (m) or reducer (r)
 
 title = "%s as recorded by the %s" % (KEY, "mappers" if POV is "m" else "reducers")
 
-data = json.load(open(sys.argv[1]))
+data = utils.load_experiments(SCEN, EXP)
+if len(data) == 0:
+    print("No experiments found")
+    sys.exit(1)
 
-num_vms = 0
-num_nodes_per_vm = 1
+values = []
+for data in data:
+    num_vms = utils.scen_num_vms(SCEN)
+    num_nodes_per_vm = 1
 
-peers = []
-for vm in data:
-    num_vms += 1
-    for n in data[vm].keys():
-        if ":" + POV in n:
-            peers.append(n)
-
-values = {}
-for peer in peers:
+    peers = []
     for vm in data:
+        num_vms += 1
         for n in data[vm].keys():
-            if ":" + POV not in n:
-                for conn in data[vm][n]:
-#                    print(peer, n, conn["peer_name"])
-                    if peer == conn["peer_name"]:
-                        values[(peer, n)] = conn[KEY]
+            if ":" + POV in n:
+                peers.append(n)
 
-keys = sorted(list(values.keys()))
-print(keys)
+    v = {}
+    for peer in peers:
+        for vm in data:
+            for n in data[vm].keys():
+                if ":" + POV not in n:
+                    for conn in data[vm][n]:
+    #                    print(peer, n, conn["peer_name"])
+                        if peer == conn["peer_name"]:
+                            v[(peer, n)] = int(conn[KEY])
+    values.append(v)
 
-def getindex(k):
-    m = re.match(r"vm([0-9]+):[mr]([0-9]+)", k)
-    return int(m.group(1)) + int(m.group(2)) - 1
+keys = values[0].keys()
 
 matrix = np.zeros((len(peers), len(peers)))
 xlabels = [""] * len(peers)
@@ -50,7 +66,11 @@ ylabels = [""] * len(peers)
 for k in keys:
     x = getindex(k[0])
     y = getindex(k[1])
-    matrix[x, y] = values[k]
+    aux = []
+    for v in values:
+        aux.append(v[k])
+    print(aux)
+    matrix[x, y] = np.average(aux)
     xlabels[x] = k[0]
     ylabels[y] = k[1]
 
