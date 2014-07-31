@@ -503,7 +503,7 @@ void* reducer_connection(void* varg)
 	char buf[DATA_CHUNK_SIZE];
 	char conn_name[NAME_LEN];
 	char my_name[NAME_LEN];
-	ssize_t data_recv_size = 0;
+	ssize_t data_recv_size;
 	char* end_character = NULL;
 	struct measurement** results;
 	long long time_s, time_e;
@@ -540,6 +540,7 @@ void* reducer_connection(void* varg)
 		if (ret) {
 			fprintf(logfp, "(%s) -> error sending name: %s\n", conn_name, strerror(errno)); // not threadsafe
 		}
+		data_recv_size = 0;
 		do {
 			ret = recv(s, buf, DATA_CHUNK_SIZE, 0);
 			if (ret) {
