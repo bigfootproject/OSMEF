@@ -28,7 +28,7 @@ for data in experiments:
     total_red_count = 0
 
     if (len(data) != num_vms):
-        print("(%s) Expected %d VMs, found %d" % (d, num_vms, len(data)))
+        print("(%s) Expected %d VMs, found %d" % (data["scenario_name"], num_vms, len(data)))
         all_good = False
     for i in range(num_vms):
         vm = "vm%d" % (i + 1)
@@ -40,7 +40,7 @@ for data in experiments:
                 data[vm][mapn]
             except KeyError:
                 all_good = False
-                print("(%s) Expected mapper %s, not found" % (d, mapn))
+                print("(%s) Expected mapper %s, not found" % (data["scenario_name"], mapn))
         red_cnt = utils.scen_num_reducers(scenario_name, vm)
         total_red_count += red_cnt
         for r in range(red_cnt):
@@ -49,7 +49,7 @@ for data in experiments:
                 data[vm][redn]
             except KeyError:
                 all_good = False
-                print("(%s) Expected reducer %s, not found" % (d, mapn))
+                print("(%s) Expected reducer %s, not found" % (data["scenario_name"], mapn))
 
     per_mapper_size = shuffle_size / total_map_count
     per_reducer_size = per_mapper_size / total_red_count
@@ -60,12 +60,12 @@ for data in experiments:
             for conn in data[vm][mapn]:
                 if int(conn["bytes"]) != int(per_reducer_size):
                     all_good = False
-                    print("(%s) %s has moved %s bytes instead of %d" % (d, redn, conn["bytes"], per_reducer_size))
+                    print("(%s) %s has moved %s bytes instead of %d" % (data["scenario_name"], redn, conn["bytes"], per_reducer_size))
     for r in range(red_cnt):
             for conn in data[vm][redn]:
                 if int(conn["bytes"]) != int(per_reducer_size):
                     all_good = False
-                    print("(%s) %s has moved %s bytes instead of %d" % (d, redn, conn["bytes"], per_reducer_size))
+                    print("(%s) %s has moved %s bytes instead of %d" % (data["scenario_name"], redn, conn["bytes"], per_reducer_size))
 
 #        print(data[vm].keys())
 
