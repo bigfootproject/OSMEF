@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-import os
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
 
 import utils
 
@@ -21,7 +19,7 @@ summary = {}
 for e in exp:
     summary[e] = {}
     for s in exp[e][0]:
-        data = utils.load_experiments(exp[e][1] % s, e)
+        names, data = utils.load_experiments(exp[e][1] % s, e)
         bw_exps = []
         for d in data:
             bw_exps.append(utils.exp_calc_bw(d))

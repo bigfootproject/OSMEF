@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-import json
-import os
 import re
 import sys
 
@@ -15,22 +13,20 @@ def getindex(k):
     m = re.match(r"vm([0-9]+):[mr]([0-9]+)", k)
     return int(m.group(1)) + int(m.group(2)) - 1
 
-try:
-    KEY = sys.argv[1]
-    SCEN = sys.argv[2]
-    EXP = sys.argv[3]
-except IndexError:
-    print("Usage: <cpu_time|bytes|time_elapsed> <scenario> <experiment>")
-    sys.exit(1)
+EXP = "vms_on_same_host_v2_1tb"
+
+SCEN = "local50_1tb"
 
 #KEY = "cpu_time"
 #KEY = "bytes"
-KEY = "time_elapsed"
+#KEY = "time_elapsed"
+KEY = "wall_time_start"
+
 POV = "r"  # point of view: mapper (m) or reducer (r)
 
 title = "%s as recorded by the %s" % (KEY, "mappers" if POV is "m" else "reducers")
 
-data = utils.load_experiments(SCEN, EXP)
+names, data = utils.load_experiments(SCEN, EXP)
 if len(data) == 0:
     print("No experiments found")
     sys.exit(1)
@@ -69,8 +65,7 @@ for k in keys:
     aux = []
     for v in values:
         aux.append(v[k])
-    print(aux)
-    matrix[x, y] = np.average(aux)
+    matrix[y, x] = np.average(aux)
     xlabels[x] = k[0]
     ylabels[y] = k[1]
 

@@ -9,6 +9,7 @@ EXP_PATH = os.path.join(BASE_PATH, "experiments")
 def load_experiments(scenario, experiment):
     paths = []
     data = []
+    names = []
     for dn in os.listdir(os.path.join(EXP_PATH, experiment)):
         d = os.path.join(EXP_PATH, experiment, dn)
         if not os.path.isdir(d):
@@ -17,8 +18,8 @@ def load_experiments(scenario, experiment):
             paths.append((os.path.join(EXP_PATH, experiment, d), dn))
     for p in paths:
         data.append(json.load(open(os.path.join(p[0], "summary.json"))))
-        data[-1]["scenario_name"] = p[1]
-    return data
+        names.append(p[1])
+    return (names, data)
 
 def scen_name(scen_name):
     scen = ConfigParser()
