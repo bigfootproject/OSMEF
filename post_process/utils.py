@@ -9,14 +9,15 @@ EXP_PATH = os.path.join(BASE_PATH, "experiments")
 def load_experiments(scenario, experiment):
     paths = []
     data = []
-    for d in os.listdir(os.path.join(EXP_PATH, experiment)):
-        d = os.path.join(EXP_PATH, experiment, d)
+    for dn in os.listdir(os.path.join(EXP_PATH, experiment)):
+        d = os.path.join(EXP_PATH, experiment, dn)
         if not os.path.isdir(d):
             continue
         if scenario + "-" in d:
-            paths.append(os.path.join(EXP_PATH, experiment, d))
+            paths.append((os.path.join(EXP_PATH, experiment, d), dn))
     for p in paths:
-        data.append(json.load(open(os.path.join(p, "summary.json"))))
+        data.append(json.load(open(os.path.join(p[0], "summary.json"))))
+        data[-1]["scenario_name"] = p[1]
     return data
 
 def scen_name(scen_name):
