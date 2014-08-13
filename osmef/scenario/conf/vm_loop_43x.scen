@@ -1,0 +1,18 @@
+[description]
+name = vm_loopback_xlarge_43
+# Shuffle size in GB
+total_shuffle_size = 100
+num_vms = 1
+
+[node]
+num_conn_rx = 60
+num_conn_tx = 60
+
+[vm]
+flavor = m1.xlarge
+
+[vm1]
+zone = zone_perf:bigfoot1
+num_mappers = 43
+num_reducers = 1
+
