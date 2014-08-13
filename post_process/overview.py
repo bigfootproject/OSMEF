@@ -1,21 +1,24 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import json
 import sys
-import os
+import numpy as np
 
-summary = {}
-for f in sys.argv[1:]:
-    data = json.load(open(f, "r"))
-    scen_name = os.path.split(f)[-1][:-len("_summary.json")]
-    summary[scen_name] = {}
-    summary[scen_name]["thr"] = data[scen_name]["aggr"]["total_throughput_bit_sec"]["thr"]
-    summary[scen_name]["std"] = data[scen_name]["aggr"]["total_throughput_bit_sec"]["std"]
+import utils
+
+names, data = utils.load_experiments(sys.argv[1], sys.argv[2])
+
+bws = []
+for exp in data:
+    bws.append(utils.exp_calc_bw(exp))
 
 print("Results")
 
-print("{:<20s} | {:>8s} | {:>8s}".format("scenario", "aggregate thrput Gbit/s", "stddev"))
+avg = np.average(bws)
+std = np.std(bws)
 
-for name in sorted(summary):
-    print("{:<20s} | {:>8.3f} | {:>8.3f}".format(name, float(summary[name]["thr"]) / 1000000000, float(summary[name]["std"]) / 1000000000))
+print("Avg: {:.3f} Gb/s, stddev: {:.3f}".format(avg / 1000000000, std / 1000000000))
+#print("{:<20s} | {:>8s} | {:>8s}".format("scenario", "aggregate thrput Gbit/s", "stddev"))
+
+#for name in sorted(summary):
+#    print("{:<20s} | {:>8.3f} | {:>8.3f}".format(name, float(summary[name]["thr"]) / 1000000000, float(summary[name]["std"]) / 1000000000))
 
