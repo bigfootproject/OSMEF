@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
 import sys
-import os
-import json
 
 import utils
 

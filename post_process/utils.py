@@ -3,7 +3,7 @@ import os
 import json
 
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SCEN_PATH = os.path.join(BASE_PATH, "osmef/scenario/conf")
+SCEN_PATH = os.path.join(BASE_PATH, "osmef", "scenario", "conf")
 EXP_PATH = os.path.join(BASE_PATH, "experiments")
 
 def load_experiments(scenario, experiment):
